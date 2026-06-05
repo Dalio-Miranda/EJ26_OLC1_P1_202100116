@@ -1,0 +1,140 @@
+package com.golite.parser;
+
+import com.github.vbmacher.cup.runtime.*;
+import com.golite.lexer.Lexer;
+import com.golite.ast.*;
+import java.util.ArrayList;
+
+parser code {:
+    public ArrayList<String> errors = new ArrayList<>();
+    
+    public void report_error(String message, Object info) {
+        String error = "Error sintáctico: " + message;
+        if(info instanceof Symbol) {
+            Symbol s = (Symbol) info;
+            error += " en línea " + s.left + ", columna " + s.right;
+        }
+        errors.add(error);
+        System.err.println(error);
+    }
+    
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+    }
+:};
+
+/* Terminales */
+terminal VAR, FUNC, IF, ELSE, FOR, BREAK, CONTINUE, RETURN, NIL;
+terminal Boolean TRUE, FALSE;
+terminal TINT, TFLOAT64, TSTRING, TBOOL, TRUNE;
+terminal PRINTLN, ATOI, PARSEFLOAT, TYPEOF;
+terminal PLUS, MINUS, TIMES, DIVIDE, MOD;
+terminal ASSIGN, ASSIGN_DECL, PLUS_ASSIGN, MINUS_ASSIGN;
+terminal EQ, NEQ, LT, LE, GT, GE;
+terminal AND, OR, NOT;
+terminal INC, DEC;
+terminal LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET;
+terminal COMMA, SEMICOLON, DOT;
+terminal Integer INT_LITERAL;
+terminal Double FLOAT_LITERAL;
+terminal String STRING_LITERAL;
+terminal Character RUNE_LITERAL;
+terminal String ID;
+
+/* No terminales */
+non terminal programa;
+non terminal ArrayList stmtList;
+non terminal Object stmt;
+non terminal Object expr;
+non terminal Object tipo;
+non terminal ArrayList argList;
+non terminal ArrayList paramList;
+
+/* Precedencia */
+precedence left OR;
+precedence left AND;
+precedence left EQ, NEQ;
+precedence left LT, LE, GT, GE;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE, MOD;
+precedence right NOT, UMINUS;
+
+/* Gramática */
+start with programa;
+
+programa ::= stmtList:s
+;
+
+stmtList ::= stmtList:sl stmt:s
+            {: sl.add(s); RESULT = sl; :}
+           | /* vacio */
+            {: RESULT = new ArrayList(); :}
+;
+
+stmt ::= VAR ID:id tipo:t ASSIGN expr:e SEMICOLON?
+       | VAR ID:id tipo:t SEMICOLON?
+       | ID:id ASSIGN_DECL expr:e SEMICOLON?
+       | ID:id ASSIGN expr:e SEMICOLON?
+       | ID:id PLUS_ASSIGN expr:e SEMICOLON?
+       | ID:id MINUS_ASSIGN expr:e SEMICOLON?
+       | ID:id INC SEMICOLON?
+       | ID:id DEC SEMICOLON?
+       | IF expr:c LBRACE stmtList:s RBRACE elseStmt?
+       | FOR expr:c LBRACE stmtList:s RBRACE
+       | FOR ID:i ASSIGN_DECL expr:init SEMICOLON expr:c SEMICOLON ID:ii INC LBRACE stmtList:s RBRACE
+       | FOR ID:i ASSIGN_DECL expr:init SEMICOLON expr:c SEMICOLON ID:ii DEC LBRACE stmtList:s RBRACE
+       | BREAK SEMICOLON?
+       | CONTINUE SEMICOLON?
+       | LBRACE stmtList:s RBRACE
+       | expr:e SEMICOLON?
+;
+
+elseStmt ::= ELSE LBRACE stmtList:s RBRACE
+           | ELSE IF expr:c LBRACE stmtList:s RBRACE elseStmt?
+;
+
+tipo ::= TINT
+       | TFLOAT64
+       | TSTRING
+       | TBOOL
+       | TRUNE
+;
+
+expr ::= expr:l PLUS expr:r
+       | expr:l MINUS expr:r
+       | expr:l TIMES expr:r
+       | expr:l DIVIDE expr:r
+       | expr:l MOD expr:r
+       | expr:l EQ expr:r
+       | expr:l NEQ expr:r
+       | expr:l LT expr:r
+       | expr:l LE expr:r
+       | expr:l GT expr:r
+       | expr:l GE expr:r
+       | expr:l AND expr:r
+       | expr:l OR expr:r
+       | NOT expr:e
+       | MINUS expr:e %prec UMINUS
+       | LPAREN expr:e RPAREN
+       | INT_LITERAL:v
+       | FLOAT_LITERAL:v
+       | STRING_LITERAL:v
+       | RUNE_LITERAL:v
+       | TRUE:v
+       | FALSE:v
+       | NIL
+       | ID:v
+       | PRINTLN LPAREN argList:a RPAREN
+       | ATOI LPAREN expr:e RPAREN
+       | PARSEFLOAT LPAREN expr:e RPAREN
+       | TYPEOF LPAREN expr:e RPAREN
+       | ID:f LPAREN argList:a RPAREN
+;
+
+argList ::= argList:al COMMA expr:e
+           {: al.add(e); RESULT = al; :}
+          | expr:e
+           {: ArrayList l = new ArrayList(); l.add(e); RESULT = l; :}
+          | /* vacio */
+           {: RESULT = new ArrayList(); :}
+;
