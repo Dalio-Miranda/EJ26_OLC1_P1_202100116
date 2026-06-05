@@ -28,7 +28,6 @@ public class Main {
     public static void main(String[] args) {
         /* Codigo de prueba basico en GoLite */
         String codigo = """
-                func main() {
                     var x int = 10
                     var y int = 20
                     z := x + y
@@ -44,7 +43,6 @@ public class Main {
                     for i <= 3 {
                         fmt.Println("i =", i)
                         i++
-                    }
                 }
                 """;
 
