@@ -1,0 +1,333 @@
+/*
+ * Analizador Sintáctico para el lenguaje GoLite
+ * Generado con CUP 11b
+ * 
+ * Define la gramática del lenguaje GoLite para la Fase 1,
+ * incluyendo declaraciones de variables, operadores aritméticos,
+ * lógicos, de comparación, sentencias if/else, for, break, continue
+ * y funciones embebidas.
+ * 
+ * @author Dalio Miranda - 202100116
+ * @course Organización de Lenguajes y Compiladores 1
+ */
+
+package analisis;
+
+import java_cup.runtime.Symbol;
+import com.golite.ast.*;
+import java.util.ArrayList;
+
+/* ===== CODIGO DEL PARSER ===== */
+parser code {:
+    /* Lista de errores sintácticos encontrados */
+    public ArrayList<String[]> errores = new ArrayList<>();
+
+    /**
+     * Maneja errores sintácticos recuperables
+     * Agrega el error a la lista y continua el análisis
+     */
+    public void syntax_error(Symbol s) {
+        String[] error = {
+            "Error sintáctico: token inesperado '" + s.value + "'",
+            String.valueOf(s.left),
+            String.valueOf(s.right),
+            "Sintáctico"
+        };
+        errores.add(error);
+        System.err.println("[ERROR SINTACTICO] Token inesperado '" 
+            + s.value + "' en linea " + s.left + ", columna " + s.right);
+    }
+
+    /**
+     * Maneja errores sintácticos no recuperables
+     */
+    public void unrecovered_syntax_error(Symbol s) {
+        System.err.println("[ERROR SINTACTICO FATAL] En linea " 
+            + s.left + ", columna " + s.right);
+    }
+:}
+
+/* ===== TERMINALES ===== */
+
+/* Palabras reservadas */
+terminal VAR, FUNC, IF, ELSE, FOR, BREAK, CONTINUE, RETURN, NIL;
+
+/* Literales booleanos */
+terminal Boolean TRUE, FALSE;
+
+/* Tipos de datos */
+terminal TINT, TFLOAT64, TSTRING, TBOOL, TRUNE;
+
+/* Funciones embebidas */
+terminal PRINTLN, ATOI, PARSEFLOAT, TYPEOF;
+
+/* Operadores aritméticos */
+terminal MAS, MENOS, MULT, DIV, MOD;
+
+/* Operadores de incremento/decremento */
+terminal INC, DEC;
+
+/* Operadores de asignación */
+terminal ASIGN, ASIGNDECL, MASIGUAL, MENOSIGUAL;
+
+/* Operadores de comparación */
+terminal IGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
+
+/* Operadores lógicos */
+terminal AND, OR, NOT;
+
+/* Delimitadores */
+terminal PAR1, PAR2, LLAVE1, LLAVE2, CORCHETE1, CORCHETE2;
+terminal COMA, PTCOMA, PUNTO;
+
+/* Literales con valor semántico */
+terminal Integer ENTERO;
+terminal Double DECIMAL;
+terminal String CADENA;
+terminal Character RUNELIT;
+terminal String ID;
+
+/* ===== NO TERMINALES ===== */
+non terminal ProgramNode programa;
+non terminal ArrayList<Node> listaStmt;
+non terminal Node stmt;
+non terminal Node expr;
+non terminal String tipo;
+non terminal ArrayList<Node> listaArgs;
+
+/* ===== PRECEDENCIA Y ASOCIATIVIDAD ===== */
+/* De menor a mayor precedencia */
+precedence left OR;
+precedence left AND;
+precedence left IGUAL, DIFERENTE;
+precedence left MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
+precedence left MAS, MENOS;
+precedence left MULT, DIV, MOD;
+precedence right NOT, UMENOS;
+precedence left PAR1, PAR2;
+
+/* ===== SIMBOLO INICIAL ===== */
+start with programa;
+
+/* ===== GRAMATICA ===== */
+
+/* Programa: lista de sentencias */
+programa ::= listaStmt:ls
+    {: RESULT = new ProgramNode(ls, 1, 1); :}
+;
+
+/* Lista de sentencias: puede ser vacia */
+listaStmt ::= listaStmt:ls stmt:s
+    {: ls.add(s); RESULT = ls; :}
+    | /* vacio */
+    {: RESULT = new ArrayList<Node>(); :}
+;
+
+/* Sentencias del lenguaje */
+stmt ::=
+    /* Declaracion explicita con tipo y valor: var x int = expr */
+    VAR ID:id tipo:t ASIGN expr:e
+    {: RESULT = new VarDeclNode(id, t, e, false, idleft, idright); :}
+
+    /* Declaracion explicita con tipo sin valor: var x int */
+    | VAR ID:id tipo:t
+    {: RESULT = new VarDeclNode(id, t, null, false, idleft, idright); :}
+
+    /* Declaracion implicita infiriendo tipo: x := expr */
+    | ID:id ASIGNDECL expr:e
+    {: RESULT = new VarDeclNode(id, null, e, true, idleft, idright); :}
+
+    /* Asignacion simple: x = expr */
+    | ID:id ASIGN expr:e
+    {: RESULT = new AssignNode(id, e, idleft, idright); :}
+
+    /* Asignacion con suma: x += expr */
+    | ID:id MASIGUAL expr:e
+    {: RESULT = new CompoundAssignNode(id, "+=", e, idleft, idright); :}
+
+    /* Asignacion con resta: x -= expr */
+    | ID:id MENOSIGUAL expr:e
+    {: RESULT = new CompoundAssignNode(id, "-=", e, idleft, idright); :}
+
+    /* Incremento: x++ */
+    | ID:id INC
+    {: RESULT = new IncrDecrNode(id, "++", idleft, idright); :}
+
+    /* Decremento: x-- */
+    | ID:id DEC
+    {: RESULT = new IncrDecrNode(id, "--", idleft, idright); :}
+
+    /* Sentencia if-else */
+    | IF expr:c LLAVE1 listaStmt:si LLAVE2 ELSE LLAVE1 listaStmt:se LLAVE2
+    {: RESULT = new IfNode(c, si, se, cleft, cright); :}
+
+    /* Sentencia if sin else */
+    | IF expr:c LLAVE1 listaStmt:si LLAVE2
+    {: RESULT = new IfNode(c, si, null, cleft, cright); :}
+
+    /* Sentencia if-else if */
+    | IF expr:c LLAVE1 listaStmt:si LLAVE2 ELSE stmt:se
+    {: ArrayList<Node> elseList = new ArrayList<Node>(); elseList.add(se);
+       RESULT = new IfNode(c, si, elseList, cleft, cright); :}
+
+    /* Sentencia for con condicion: for condicion { } */
+    | FOR expr:c LLAVE1 listaStmt:s LLAVE2
+    {: RESULT = new ForNode(null, c, null, s, cleft, cright); :}
+
+    /* Sentencia for clasico: for i := 0; i < 10; i++ { } */
+    | FOR ID:i ASIGNDECL expr:init PTCOMA expr:c PTCOMA ID:ii INC LLAVE1 listaStmt:s LLAVE2
+    {: Node inicializacion = new VarDeclNode(i, null, init, true, ileft, iright);
+       Node incremento = new IncrDecrNode(ii, "++", iileft, iiright);
+       RESULT = new ForNode(inicializacion, c, incremento, s, ileft, iright); :}
+
+    /* Sentencia for clasico con decremento: for i := 10; i > 0; i-- { } */
+    | FOR ID:i ASIGNDECL expr:init PTCOMA expr:c PTCOMA ID:ii DEC LLAVE1 listaStmt:s LLAVE2
+    {: Node inicializacion = new VarDeclNode(i, null, init, true, ileft, iright);
+       Node incremento = new IncrDecrNode(ii, "--", iileft, iiright);
+       RESULT = new ForNode(inicializacion, c, incremento, s, ileft, iright); :}
+
+    /* Bloque independiente: { ... } */
+    | LLAVE1 listaStmt:s LLAVE2
+    {: RESULT = new BlockNode(s, sleft, sright); :}
+
+    /* Sentencia break */
+    | BREAK
+    {: RESULT = new BreakNode(0, 0); :}
+
+    /* Sentencia continue */
+    | CONTINUE
+    {: RESULT = new ContinueNode(0, 0); :}
+
+    /* Expresion como sentencia (llamadas a funciones, println, etc) */
+    | expr:e
+    {: RESULT = e; :}
+
+    /* Sentencias terminadas con punto y coma (opcionales) */
+    | stmt:s PTCOMA
+    {: RESULT = s; :}
+;
+
+/* Tipos de datos primitivos */
+tipo ::=
+    TINT        {: RESULT = "int"; :}
+    | TFLOAT64  {: RESULT = "float64"; :}
+    | TSTRING   {: RESULT = "string"; :}
+    | TBOOL     {: RESULT = "bool"; :}
+    | TRUNE     {: RESULT = "rune"; :}
+;
+
+/* Expresiones con precedencia definida arriba */
+expr ::=
+    /* Operaciones aritméticas */
+    expr:l MAS expr:r
+    {: RESULT = new BinaryOpNode("+", l, r, lleft, lright); :}
+
+    | expr:l MENOS expr:r
+    {: RESULT = new BinaryOpNode("-", l, r, lleft, lright); :}
+
+    | expr:l MULT expr:r
+    {: RESULT = new BinaryOpNode("*", l, r, lleft, lright); :}
+
+    | expr:l DIV expr:r
+    {: RESULT = new BinaryOpNode("/", l, r, lleft, lright); :}
+
+    | expr:l MOD expr:r
+    {: RESULT = new BinaryOpNode("%", l, r, lleft, lright); :}
+
+    /* Operaciones de comparacion */
+    | expr:l IGUAL expr:r
+    {: RESULT = new BinaryOpNode("==", l, r, lleft, lright); :}
+
+    | expr:l DIFERENTE expr:r
+    {: RESULT = new BinaryOpNode("!=", l, r, lleft, lright); :}
+
+    | expr:l MENOR expr:r
+    {: RESULT = new BinaryOpNode("<", l, r, lleft, lright); :}
+
+    | expr:l MENORIGUAL expr:r
+    {: RESULT = new BinaryOpNode("<=", l, r, lleft, lright); :}
+
+    | expr:l MAYOR expr:r
+    {: RESULT = new BinaryOpNode(">", l, r, lleft, lright); :}
+
+    | expr:l MAYORIGUAL expr:r
+    {: RESULT = new BinaryOpNode(">=", l, r, lleft, lright); :}
+
+    /* Operaciones logicas */
+    | expr:l AND expr:r
+    {: RESULT = new BinaryOpNode("&&", l, r, lleft, lright); :}
+
+    | expr:l OR expr:r
+    {: RESULT = new BinaryOpNode("||", l, r, lleft, lright); :}
+
+    /* Negacion logica */
+    | NOT expr:e
+    {: RESULT = new UnaryOpNode("!", e, eleft, eright); :}
+
+    /* Negacion unaria numerica */
+    | MENOS expr:e
+    {: RESULT = new UnaryOpNode("-", e, eleft, eright); :}
+    %prec UMENOS
+
+    /* Agrupacion con parentesis */
+    | PAR1 expr:e PAR2
+    {: RESULT = e; :}
+
+    /* Literales */
+    | ENTERO:v
+    {: RESULT = new LiteralNode(v, "int", vleft, vright); :}
+
+    | DECIMAL:v
+    {: RESULT = new LiteralNode(v, "float64", vleft, vright); :}
+
+    | CADENA:v
+    {: RESULT = new LiteralNode(v, "string", vleft, vright); :}
+
+    | RUNELIT:v
+    {: RESULT = new LiteralNode(v, "rune", vleft, vright); :}
+
+    | TRUE:v
+    {: RESULT = new LiteralNode(true, "bool", vleft, vright); :}
+
+    | FALSE:v
+    {: RESULT = new LiteralNode(false, "bool", vleft, vright); :}
+
+    | NIL
+    {: RESULT = new LiteralNode(null, "nil", 0, 0); :}
+
+    /* Identificador (acceso a variable) */
+    | ID:v
+    {: RESULT = new IdentifierNode(v, vleft, vright); :}
+
+    /* Funcion embebida fmt.Println */
+    | PRINTLN PAR1 listaArgs:a PAR2
+    {: RESULT = new PrintlnNode(a, aleft, aright); :}
+
+    /* Funcion embebida strconv.Atoi */
+    | ATOI PAR1 expr:e PAR2
+    {: RESULT = new AtoiNode(e, eleft, eright); :}
+
+    /* Funcion embebida strconv.ParseFloat */
+    | PARSEFLOAT PAR1 expr:e PAR2
+    {: RESULT = new ParseFloatNode(e, eleft, eright); :}
+
+    /* Funcion embebida reflect.TypeOf */
+    | TYPEOF PAR1 expr:e PAR2
+    {: RESULT = new TypeOfNode(e, eleft, eright); :}
+
+    /* Llamada a funcion definida por el usuario */
+    | ID:f PAR1 listaArgs:a PAR2
+    {: RESULT = new FuncCallNode(f, a, fleft, fright); :}
+;
+
+/* Lista de argumentos para llamadas a funciones */
+listaArgs ::=
+    listaArgs:la COMA expr:e
+    {: la.add(e); RESULT = la; :}
+
+    | expr:e
+    {: ArrayList<Node> l = new ArrayList<Node>(); l.add(e); RESULT = l; :}
+
+    | /* vacio */
+    {: RESULT = new ArrayList<Node>(); :}
+;
