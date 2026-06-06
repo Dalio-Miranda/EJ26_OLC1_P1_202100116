@@ -21,6 +21,8 @@ C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\TypeOfNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\UnaryOpNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\VarDeclNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\Visitor.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\gui\MainWindow.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\gui\TextLineNumber.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\interpreter\Interpreter.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\Main.java
 C:\Users\dalio\Documents\GoLite\target\generated-sources\cup\analisis\parser.java
