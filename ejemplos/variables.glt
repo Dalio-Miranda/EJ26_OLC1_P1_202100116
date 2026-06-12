@@ -1,0 +1,20 @@
+// Ejemplo de variables en GoLite
+func main() {
+    var x int = 10
+    var y float64 = 3.14
+    var nombre string = "GoLite"
+    var activo bool = true
+    var caracter rune = 'A'
+
+    fmt.Println("Entero:", x)
+    fmt.Println("Decimal:", y)
+    fmt.Println("Cadena:", nombre)
+    fmt.Println("Booleano:", activo)
+    fmt.Println("Rune:", caracter)
+
+    x += 5
+    fmt.Println("x despues de += 5:", x)
+
+    tipo := reflect.TypeOf(x)
+    fmt.Println("Tipo de x:", tipo)
+}

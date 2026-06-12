@@ -1,0 +1,21 @@
+// Ejemplo de if-else en GoLite
+func main() {
+    var nota int = 85
+
+    if nota >= 90 {
+        fmt.Println("Excelente")
+    } else if nota >= 70 {
+        fmt.Println("Aprobado")
+    } else {
+        fmt.Println("Reprobado")
+    }
+
+    var a int = 10
+    var b int = 20
+
+    if a > b {
+        fmt.Println("a es mayor")
+    } else {
+        fmt.Println("b es mayor")
+    }
+}

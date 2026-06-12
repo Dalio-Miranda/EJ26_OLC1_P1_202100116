@@ -1,0 +1,32 @@
+// Ejemplo de for en GoLite
+func main() {
+    // For con condicion
+    i := 1
+    for i <= 5 {
+        fmt.Println("i =", i)
+        i++
+    }
+
+    // For clasico
+    for j := 0; j < 5; j++ {
+        fmt.Println("j =", j)
+    }
+
+    // For con break
+    k := 0
+    for k < 10 {
+        if k == 5 {
+            break
+        }
+        fmt.Println("k =", k)
+        k++
+    }
+
+    // For con continue
+    for n := 0; n < 10; n++ {
+        if n % 2 == 0 {
+            continue
+        }
+        fmt.Println("impar:", n)
+    }
+}

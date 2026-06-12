@@ -1,0 +1,16 @@
+// Ejemplo de errores en GoLite
+func main() {
+    // Error: variable no declarada
+    fmt.Println(variableNoExiste)
+
+    // Error: division por cero
+    var x int = 10
+    var y int = 0
+    resultado := x / y
+
+    // Error: tipo incorrecto
+    var z int = "cadena"
+
+    // Caracter no reconocido (error lexico)
+    var @ int = 5
+}
