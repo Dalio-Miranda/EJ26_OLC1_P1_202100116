@@ -48,6 +48,7 @@ non terminal Node stmt;
 non terminal Node expr;
 non terminal String tipo;
 non terminal ArrayList<Node> listaArgs;
+non terminal ArrayList<Node> elseOpc;
 
 precedence left OR;
 precedence left AND;
@@ -97,16 +98,8 @@ stmt ::=
     | ID:id DEC
     {: RESULT = new IncrDecrNode(id, "--", idleft, idright); :}
 
-    | IF expr:c LLAVE1 listaStmt:si LLAVE2 ELSE LLAVE1 listaStmt:se LLAVE2
-    {: RESULT = new IfNode(c, si, se, cleft, cright); :}
-
-    | IF expr:c LLAVE1 listaStmt:si LLAVE2 ELSE IF expr:c2 LLAVE1 listaStmt:se LLAVE2
-    {: ArrayList<Node> elseList = new ArrayList<Node>();
-       elseList.add(new IfNode(c2, se, null, c2left, c2right));
-       RESULT = new IfNode(c, si, elseList, cleft, cright); :}
-
-    | IF expr:c LLAVE1 listaStmt:si LLAVE2
-    {: RESULT = new IfNode(c, si, null, cleft, cright); :}
+    | IF expr:c LLAVE1 listaStmt:si LLAVE2 elseOpc:eo
+    {: RESULT = new IfNode(c, si, eo, cleft, cright); :}
 
     | FOR expr:c LLAVE1 listaStmt:s LLAVE2
     {: RESULT = new ForNode(null, c, null, s, cleft, cright); :}
@@ -121,6 +114,21 @@ stmt ::=
        Node upd = new IncrDecrNode(ii, "--", iileft, iiright);
        RESULT = new ForNode(ini, c, upd, s, ileft, iright); :}
 
+    | FOR ID:i ASIGNDECL expr:init PTCOMA expr:c PTCOMA ID:ii MASIGUAL expr:up LLAVE1 listaStmt:s LLAVE2
+    {: Node ini = new VarDeclNode(i, null, init, true, ileft, iright);
+       Node upd = new CompoundAssignNode(ii, "+=", up, iileft, iiright);
+       RESULT = new ForNode(ini, c, upd, s, ileft, iright); :}
+
+    | FOR ID:i ASIGNDECL expr:init PTCOMA expr:c PTCOMA ID:ii MENOSIGUAL expr:up LLAVE1 listaStmt:s LLAVE2
+    {: Node ini = new VarDeclNode(i, null, init, true, ileft, iright);
+       Node upd = new CompoundAssignNode(ii, "-=", up, iileft, iiright);
+       RESULT = new ForNode(ini, c, upd, s, ileft, iright); :}
+
+    | FOR ID:i ASIGNDECL expr:init PTCOMA expr:c PTCOMA ID:ii ASIGN expr:up LLAVE1 listaStmt:s LLAVE2
+    {: Node ini = new VarDeclNode(i, null, init, true, ileft, iright);
+       Node upd = new AssignNode(ii, up, iileft, iiright);
+       RESULT = new ForNode(ini, c, upd, s, ileft, iright); :}
+
     | LLAVE1 listaStmt:s LLAVE2
     {: RESULT = new BlockNode(s, sleft, sright); :}
 
@@ -132,6 +140,20 @@ stmt ::=
 
     | expr:e
     {: RESULT = e; :}
+;
+
+elseOpc ::=
+    ELSE LLAVE1 listaStmt:se LLAVE2
+    {: RESULT = se; :}
+
+    | ELSE IF expr:c LLAVE1 listaStmt:si LLAVE2 elseOpc:eo
+    {: ArrayList<Node> lista = new ArrayList<Node>();
+       lista.add(new IfNode(c, si, eo, cleft, cright));
+       RESULT = lista;
+    :}
+
+    | /* vacio */
+    {: RESULT = null; :}
 ;
 
 tipo ::=

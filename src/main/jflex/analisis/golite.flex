@@ -9,7 +9,7 @@ import java_cup.runtime.Symbol;
 %public
 %line
 %column
-%8bit
+%unicode
 
 %{
     public static java.util.ArrayList<String[]> listaTokens = new java.util.ArrayList<>();
