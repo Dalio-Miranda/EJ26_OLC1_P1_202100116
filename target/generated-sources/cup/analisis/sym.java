@@ -14,8 +14,9 @@ public interface sym {
   public static final int MULT = 24;
   public static final int LLAVE2 = 46;
   public static final int LLAVE1 = 45;
-  public static final int ENTERO = 52;
+  public static final int ENTERO = 56;
   public static final int TFLOAT64 = 14;
+  public static final int CASE = 54;
   public static final int DIFERENTE = 34;
   public static final int CONTINUE = 8;
   public static final int PRINTLN = 18;
@@ -37,26 +38,29 @@ public interface sym {
   public static final int ATOI = 19;
   public static final int UMENOS = 42;
   public static final int IF = 4;
-  public static final int ID = 56;
+  public static final int ID = 60;
   public static final int MAYORIGUAL = 38;
-  public static final int DECIMAL = 53;
+  public static final int DECIMAL = 57;
   public static final int EOF = 0;
   public static final int RETURN = 9;
   public static final int TRUE = 11;
   public static final int error = 1;
   public static final int COMA = 49;
-  public static final int RUNELIT = 55;
-  public static final int CADENA = 54;
+  public static final int RUNELIT = 59;
+  public static final int CADENA = 58;
   public static final int MENOS = 23;
   public static final int MENOR = 35;
   public static final int MOD = 26;
   public static final int BREAK = 7;
+  public static final int SWITCH = 53;
   public static final int TRUNE = 17;
   public static final int MAYOR = 37;
+  public static final int COLON = 52;
   public static final int TINT = 13;
   public static final int ELSE = 5;
   public static final int PUNTO = 51;
   public static final int FUNC = 3;
+  public static final int DEFAULT = 55;
   public static final int MENOSIGUAL = 32;
   public static final int ASIGN = 29;
   public static final int PTCOMA = 50;
@@ -118,6 +122,10 @@ public interface sym {
   "COMA",
   "PTCOMA",
   "PUNTO",
+  "COLON",
+  "SWITCH",
+  "CASE",
+  "DEFAULT",
   "ENTERO",
   "DECIMAL",
   "CADENA",

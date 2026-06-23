@@ -112,6 +112,11 @@ ComentarioBloque = "/*"[^*]*\*+([^/*][^*]*\*+)*"/"
 ";"             { return token(sym.PTCOMA); }
 "."             { return token(sym.PUNTO); }
 
+"switch"        { return token(sym.SWITCH); }
+"case"          { return token(sym.CASE); }
+"default"       { return token(sym.DEFAULT); }
+":"             { return token(sym.COLON); }
+
 {Decimal}       { return token(sym.DECIMAL, Double.parseDouble(yytext())); }
 {Entero}        { return token(sym.ENTERO, Integer.parseInt(yytext())); }
 {Cadena}        {

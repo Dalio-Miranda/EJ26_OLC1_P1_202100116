@@ -25,6 +25,7 @@ parser code {:
     }
 :}
 
+/* ===== TERMINALES ===== */
 terminal VAR, FUNC, IF, ELSE, FOR, BREAK, CONTINUE, RETURN, NIL;
 terminal Boolean TRUE, FALSE;
 terminal TINT, TFLOAT64, TSTRING, TBOOL, TRUNE;
@@ -35,13 +36,15 @@ terminal ASIGN, ASIGNDECL, MASIGUAL, MENOSIGUAL;
 terminal IGUAL, DIFERENTE, MENOR, MENORIGUAL, MAYOR, MAYORIGUAL;
 terminal AND, OR, NOT, UMENOS;
 terminal PAR1, PAR2, LLAVE1, LLAVE2, CORCHETE1, CORCHETE2;
-terminal COMA, PTCOMA, PUNTO;
+terminal COMA, PTCOMA, PUNTO, COLON;
+terminal SWITCH, CASE, DEFAULT;
 terminal Integer ENTERO;
 terminal Double DECIMAL;
 terminal String CADENA;
 terminal Character RUNELIT;
 terminal String ID;
 
+/* ===== NO TERMINALES ===== */
 non terminal ProgramNode programa;
 non terminal ArrayList<Node> listaStmt;
 non terminal Node stmt;
@@ -49,7 +52,12 @@ non terminal Node expr;
 non terminal String tipo;
 non terminal ArrayList<Node> listaArgs;
 non terminal ArrayList<Node> elseOpc;
+non terminal SwitchNode switchStmt;
+non terminal ArrayList<CaseNode> listaCases;
+non terminal CaseNode caseStmt;
 
+/* ===== PRECEDENCIA ===== */
+precedence right RETURN;
 precedence left OR;
 precedence left AND;
 precedence left IGUAL, DIFERENTE;
@@ -60,6 +68,8 @@ precedence right NOT, UMENOS;
 precedence left PAR1, PAR2;
 
 start with programa;
+
+/* ===== GRAMATICA ===== */
 
 programa ::= listaStmt:ls
     {: RESULT = new ProgramNode(ls, 1, 1); :}
@@ -138,10 +148,22 @@ stmt ::=
     | CONTINUE
     {: RESULT = new ContinueNode(0, 0); :}
 
+    | RETURN expr:e
+    {: RESULT = new ReturnNode(e, eleft, eright); :}
+    %prec RETURN
+
+    | RETURN
+    {: RESULT = new ReturnNode(null, 0, 0); :}
+    %prec RETURN
+
+    | switchStmt:s
+    {: RESULT = s; :}
+
     | expr:e
     {: RESULT = e; :}
 ;
 
+/* Opciones del else */
 elseOpc ::=
     ELSE LLAVE1 listaStmt:se LLAVE2
     {: RESULT = se; :}
@@ -156,6 +178,7 @@ elseOpc ::=
     {: RESULT = null; :}
 ;
 
+/* Tipos de datos primitivos */
 tipo ::=
     TINT        {: RESULT = "int"; :}
     | TFLOAT64  {: RESULT = "float64"; :}
@@ -164,6 +187,7 @@ tipo ::=
     | TRUNE     {: RESULT = "rune"; :}
 ;
 
+/* Expresiones */
 expr ::=
     expr:l MAS expr:r
     {: RESULT = new BinaryOpNode("+", l, r, lleft, lright); :}
@@ -254,6 +278,7 @@ expr ::=
     {: RESULT = new FuncCallNode(f, a, fleft, fright); :}
 ;
 
+/* Lista de argumentos */
 listaArgs ::=
     listaArgs:la COMA expr:e
     {: la.add(e); RESULT = la; :}
@@ -263,4 +288,28 @@ listaArgs ::=
 
     | /* vacio */
     {: RESULT = new ArrayList<Node>(); :}
+;
+
+/* Sentencia switch-case */
+switchStmt ::=
+    SWITCH expr:e LLAVE1 listaCases:lc LLAVE2
+    {: RESULT = new SwitchNode(e, lc, null, eleft, eright); :}
+
+    | SWITCH expr:e LLAVE1 listaCases:lc DEFAULT COLON listaStmt:ds LLAVE2
+    {: RESULT = new SwitchNode(e, lc, ds, eleft, eright); :}
+;
+
+/* Lista de casos */
+listaCases ::=
+    listaCases:lc caseStmt:c
+    {: lc.add(c); RESULT = lc; :}
+
+    | /* vacio */
+    {: RESULT = new ArrayList<CaseNode>(); :}
+;
+
+/* Un caso individual */
+caseStmt ::=
+    CASE expr:e COLON listaStmt:s
+    {: RESULT = new CaseNode(e, s, eleft, eright); :}
 ;
