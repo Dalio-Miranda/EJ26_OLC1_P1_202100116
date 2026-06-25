@@ -4,6 +4,7 @@ import analisis.Scanner;
 import analisis.parser;
 import com.golite.ast.*;
 import com.golite.interpreter.Interpreter;
+import com.golite.reports.ASTReport;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,6 +15,7 @@ import java.io.*;
 import java.nio.file.*;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
+import java.io.File;
 
 /**
  * Ventana principal del IDE para el lenguaje GoLite.
@@ -151,17 +153,22 @@ public class MainWindow extends JFrame {
 
         JMenuItem itemTokens = new JMenuItem("Tabla de Tokens");
         JMenuItem itemErrores = new JMenuItem("Reporte de Errores");
+        JMenuItem itemAST = new JMenuItem("Reporte AST");
 
         itemTokens.setBackground(bgItem);
         itemTokens.setForeground(Color.WHITE);
         itemErrores.setBackground(bgItem);
         itemErrores.setForeground(Color.WHITE);
+        itemAST.setBackground(bgItem);
+        itemAST.setForeground(Color.WHITE);
 
         itemTokens.addActionListener(e -> mostrarTokens());
         itemErrores.addActionListener(e -> mostrarErrores());
+        itemAST.addActionListener(e -> mostrarAST());
 
         menuReportes.add(itemTokens);
         menuReportes.add(itemErrores);
+        menuReportes.add(itemAST);
 
         menuBar.add(menuArchivo);
         menuBar.add(menuEjecutar);
@@ -527,7 +534,56 @@ public class MainWindow extends JFrame {
         ventana.add(new JScrollPane(tabla));
         ventana.setVisible(true);
     }
+private void mostrarAST() {
+    try {
+        Scanner.listaTokens.clear();
 
+        Scanner scanner = new Scanner(
+            new BufferedReader(new StringReader(editorArea.getText()))
+        );
+
+        parser p = new parser(scanner);
+        Symbol resultado = p.parse();
+
+        if (resultado == null || resultado.value == null) {
+            JOptionPane.showMessageDialog(
+                this,
+                "No se pudo generar el AST.",
+                "AST",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        ProgramNode ast = (ProgramNode) resultado.value;
+
+        ASTReport reporte = new ASTReport();
+        File imagenAST = reporte.generarImagen(ast);
+
+        JFrame ventana = new JFrame("Reporte AST");
+        ventana.setSize(1200, 700);
+        ventana.setLocationRelativeTo(this);
+
+        ImageIcon icono = new ImageIcon(imagenAST.getAbsolutePath());
+        JLabel lblImagen = new JLabel(icono);
+
+        JScrollPane scroll = new JScrollPane(lblImagen);
+
+        ventana.add(scroll);
+        ventana.setVisible(true);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Error al generar AST: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
+        e.printStackTrace();
+    }
+}
+
+    
     /**
      * Actualiza el indicador de linea y columna en la barra de estado
      */

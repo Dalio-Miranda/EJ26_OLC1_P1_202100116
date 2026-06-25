@@ -3,7 +3,6 @@ package com.golite.ast;
 /**
  * Interfaz Visitor para el patron de diseno Visitor.
  * Define un metodo visit() para cada tipo de nodo del AST.
- * El interprete implementa esta interfaz para ejecutar cada nodo.
  *
  * @author Dalio Miranda - 202100116
  * @course Organización de Lenguajes y Compiladores 1
@@ -36,7 +35,8 @@ public interface Visitor {
     Object visit(ParseFloatNode node, Environment env);
     Object visit(TypeOfNode node, Environment env);
 
-    // Llamadas a funciones
+    // Funciones de usuario
+    Object visit(FuncDeclNode node, Environment env);
     Object visit(FuncCallNode node, Environment env);
 
     // Asignaciones

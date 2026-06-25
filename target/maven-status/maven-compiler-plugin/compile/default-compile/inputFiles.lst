@@ -10,6 +10,7 @@ C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\ContinueNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\Environment.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\ForNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\FuncCallNode.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\FuncDeclNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\IdentifierNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\IfNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\IncrDecrNode.java
@@ -28,6 +29,7 @@ C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\gui\MainWindow.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\gui\TextLineNumber.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\interpreter\Interpreter.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\Main.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\reports\ASTReport.java
 C:\Users\dalio\Documents\GoLite\target\generated-sources\cup\analisis\parser.java
 C:\Users\dalio\Documents\GoLite\target\generated-sources\cup\analisis\sym.java
 C:\Users\dalio\Documents\GoLite\target\generated-sources\jflex\analisis\Scanner.java
