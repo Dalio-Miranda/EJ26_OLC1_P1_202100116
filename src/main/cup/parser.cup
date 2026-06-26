@@ -333,6 +333,17 @@ expr ::=
     {: RESULT = new FuncCallNode(f, a, fleft, fright); :}
         | CORCHETE1 CORCHETE2 tipo:t LLAVE1 listaArgs:a LLAVE2
     {: RESULT = new SliceLiteralNode(t, a, aleft, aright); :}
+    | ID:s CORCHETE1 expr:i CORCHETE2 CORCHETE1 expr:j CORCHETE2
+{:
+    SliceAccessNode fila = new SliceAccessNode(
+        new IdentifierNode(s, sleft, sright),
+        i,
+        sleft,
+        sright
+    );
+
+    RESULT = new SliceAccessNode(fila, j, sleft, sright);
+:}
 
     | ID:s CORCHETE1 expr:i CORCHETE2
 {: RESULT = new SliceAccessNode(new IdentifierNode(s, sleft, sright), i, sleft, sright); :}
