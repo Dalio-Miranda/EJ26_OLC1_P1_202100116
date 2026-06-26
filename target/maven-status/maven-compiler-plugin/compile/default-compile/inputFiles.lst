@@ -27,6 +27,7 @@ C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SliceIndexNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SliceLiteralNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StringJoinNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructAccessNode.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructAssignNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructDeclNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructFieldValue.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructInitNode.java

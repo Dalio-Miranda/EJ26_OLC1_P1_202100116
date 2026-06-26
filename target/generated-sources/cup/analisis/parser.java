@@ -33,7 +33,7 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\142\000\002\002\004\000\002\002\003\000\002\003" +
+    "\000\141\000\002\002\004\000\002\002\003\000\002\003" +
     "\004\000\002\003\004\000\002\003\004\000\002\003\002" +
     "\000\002\003\004\000\002\004\004\000\002\004\004\000" +
     "\002\004\002\000\002\005\007\000\002\005\005\000\002" +
@@ -61,9 +61,9 @@ public class parser extends java_cup.runtime.lr_parser {
     "\002\000\002\012\007\000\002\012\012\000\002\013\004" +
     "\000\002\013\002\000\002\014\006\000\002\015\012\000" +
     "\002\015\013\000\002\020\010\000\002\016\005\000\002" +
-    "\016\003\000\002\016\002\000\002\017\004\000\002\023" +
-    "\006\000\002\021\005\000\002\021\003\000\002\021\002" +
-    "\000\002\022\005" });
+    "\016\003\000\002\016\002\000\002\017\004\000\002\021" +
+    "\005\000\002\021\003\000\002\021\002\000\002\022\005" +
+    "" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -690,16 +690,16 @@ public class parser extends java_cup.runtime.lr_parser {
     "\052\uffc1\053\uffc1\054\uffc1\055\uffc1\056\uffc1\057\uffc1\060" +
     "\uffc1\061\uffc1\063\067\065\216\066\uffc1\067\066\072\uffc1" +
     "\073\065\075\uffc1\076\uffc1\077\uffc1\100\uffc1\101\uffc1\102" +
-    "\uffc1\103\uffc1\104\uffc1\001\002\000\010\066\uffa1\071\uffa1" +
+    "\uffc1\103\uffc1\104\uffc1\001\002\000\010\066\uffa2\071\uffa2" +
     "\104\217\001\002\000\004\074\225\001\002\000\006\066" +
-    "\223\071\222\001\002\000\006\066\uffa2\071\uffa2\001\002" +
+    "\223\071\222\001\002\000\006\066\uffa3\071\uffa3\001\002" +
     "\000\004\104\217\001\002\000\112\002\uffe1\003\uffe1\004" +
     "\uffe1\005\uffe1\006\uffe1\010\uffe1\011\uffe1\012\uffe1\013\uffe1" +
     "\014\uffe1\015\uffe1\017\uffe1\020\uffe1\026\uffe1\027\uffe1\030" +
     "\uffe1\031\uffe1\032\uffe1\033\uffe1\034\uffe1\035\uffe1\037\uffe1" +
     "\061\uffe1\063\uffe1\065\uffe1\066\uffe1\067\uffe1\072\uffe1\075" +
     "\uffe1\076\uffe1\077\uffe1\100\uffe1\101\uffe1\102\uffe1\103\uffe1" +
-    "\104\uffe1\001\002\000\006\066\uffa3\071\uffa3\001\002\000" +
+    "\104\uffe1\001\002\000\006\066\uffa4\071\uffa4\001\002\000" +
     "\052\014\022\017\031\020\050\026\013\027\024\030\017" +
     "\031\020\032\047\033\016\034\045\035\006\037\036\061" +
     "\015\063\007\067\023\100\011\101\027\102\035\103\034" +
@@ -2594,32 +2594,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 93: // structInit ::= ID LLAVE1 listaCamposStruct LLAVE2 
-            {
-              StructInitNode RESULT =null;
-		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
-		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
-		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
-		int camposleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
-		int camposright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		ArrayList<StructFieldValue> campos = (ArrayList<StructFieldValue>)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-		
-        ArrayList<String> nombres = new ArrayList<String>();
-        ArrayList<Node> valores = new ArrayList<Node>();
-
-        for (StructFieldValue campo : campos) {
-            nombres.add(campo.name);
-            valores.add(campo.value);
-        }
-
-        RESULT = new StructInitNode(name, nombres, valores, nameleft, nameright);
-    
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("structInit",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 94: // listaCamposStruct ::= listaCamposStruct COMA campoStruct 
+          case 93: // listaCamposStruct ::= listaCamposStruct COMA campoStruct 
             {
               ArrayList<StructFieldValue> RESULT =null;
 		int lleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
@@ -2634,7 +2609,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 95: // listaCamposStruct ::= campoStruct 
+          case 94: // listaCamposStruct ::= campoStruct 
             {
               ArrayList<StructFieldValue> RESULT =null;
 		int cleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
@@ -2646,7 +2621,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 96: // listaCamposStruct ::= 
+          case 95: // listaCamposStruct ::= 
             {
               ArrayList<StructFieldValue> RESULT =null;
 		 RESULT = new ArrayList<StructFieldValue>(); 
@@ -2655,7 +2630,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 97: // campoStruct ::= ID COLON expr 
+          case 96: // campoStruct ::= ID COLON expr 
             {
               StructFieldValue RESULT =null;
 		int nleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;

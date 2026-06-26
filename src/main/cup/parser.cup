@@ -121,6 +121,7 @@ listaStmt ::= listaStmt:ls stmt:s
 ;
 
 stmt ::=
+
     VAR ID:id tipo:t ASIGN expr:e
     {: RESULT = new VarDeclNode(id, t, e, false, idleft, idright); :}
 
@@ -418,20 +419,7 @@ param ::=
     ID:nombre tipo:t
     {: RESULT = new String[]{nombre, t}; :}
     ;
-    structInit ::=
-    ID:name LLAVE1 listaCamposStruct:campos LLAVE2
-    {:
-        ArrayList<String> nombres = new ArrayList<String>();
-        ArrayList<Node> valores = new ArrayList<Node>();
 
-        for (StructFieldValue campo : campos) {
-            nombres.add(campo.name);
-            valores.add(campo.value);
-        }
-
-        RESULT = new StructInitNode(name, nombres, valores, nameleft, nameright);
-    :}
-;
 
 listaCamposStruct ::=
     listaCamposStruct:l COMA campoStruct:c

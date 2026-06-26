@@ -1030,4 +1030,33 @@ public Object visit(StructAccessNode node, Environment env) {
 
     return mapa.get(node.fieldName);
 }
+@Override
+public Object visit(StructAssignNode node, Environment env) {
+    if (!env.exists(node.structName)) {
+        registrarError("El struct '" + node.structName + "' no ha sido declarado",
+                node.line, node.column);
+        return null;
+    }
+
+    Object obj = env.getValue(node.structName);
+
+    if (!(obj instanceof java.util.HashMap<?, ?>)) {
+        registrarError("'" + node.structName + "' no es una instancia de struct",
+                node.line, node.column);
+        return null;
+    }
+
+    java.util.HashMap<String, Object> mapa = (java.util.HashMap<String, Object>) obj;
+
+    if (!mapa.containsKey(node.fieldName)) {
+        registrarError("El atributo '" + node.fieldName + "' no existe en el struct",
+                node.line, node.column);
+        return null;
+    }
+
+    Object valor = node.value.accept(this, env);
+    mapa.put(node.fieldName, valor);
+
+    return null;
+}
 }
