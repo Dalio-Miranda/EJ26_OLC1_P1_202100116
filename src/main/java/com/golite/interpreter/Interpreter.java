@@ -985,4 +985,11 @@ public Object visit(StringJoinNode node, Environment env) {
 
     return sb.toString();
 }
+@Override
+public Object visit(StructDeclNode node, Environment env) {
+    if (!env.existsLocal(node.name)) {
+        env.declare(node.name, "struct", node);
+    }
+    return null;
+}
 }

@@ -12,6 +12,7 @@ com\golite\ast\TypeOfNode.class
 com\golite\ast\Node.class
 com\golite\ast\SwitchNode.class
 com\golite\interpreter\Interpreter$ContinueException.class
+com\golite\ast\StructDeclNode.class
 com\golite\interpreter\Interpreter$BreakException.class
 com\golite\ast\IdentifierNode.class
 com\golite\ast\LenNode.class

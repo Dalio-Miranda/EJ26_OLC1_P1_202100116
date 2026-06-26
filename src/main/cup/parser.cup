@@ -41,7 +41,7 @@ parser code {:
     }
 :}
 
-terminal VAR, FUNC, IF, ELSE, FOR, BREAK, CONTINUE, RETURN, NIL;
+terminal VAR, FUNC, IF, ELSE, FOR, BREAK, CONTINUE, RETURN, NIL, TYPE, STRUCT;
 terminal Boolean TRUE, FALSE;
 terminal TINT, TFLOAT64, TSTRING, TBOOL, TRUNE;
 terminal PRINTLN, ATOI, PARSEFLOAT, TYPEOF, LEN, APPEND, SLICEINDEX, STRINGJOIN;
@@ -73,6 +73,7 @@ non terminal CaseNode caseStmt;
 non terminal FuncDeclNode funcDecl;
 non terminal ArrayList<String[]> listaParams;
 non terminal String[] param;
+non terminal StructDeclNode structDecl;
 
 precedence left OR;
 precedence left AND;
@@ -97,6 +98,8 @@ listaDecl ::= listaDecl:ld funcDecl:f
     {: RESULT = ld; :}
     | /* vacio */
     {: RESULT = new ArrayList<Node>(); :}
+    | listaDecl:ld structDecl:s
+{: ld.add(s); RESULT = ld; :}
 ;
 
 listaStmt ::= listaStmt:ls stmt:s
@@ -318,8 +321,6 @@ expr ::=
     {: RESULT = new AppendNode(s, v, sleft, sright); :}
         | SLICEINDEX PAR1 expr:s COMA expr:v PAR2
     {: RESULT = new SliceIndexNode(s, v, sleft, sright); :}
-    | STRINGJOIN PAR1 expr:s COMA expr:sep PAR2
-{: RESULT = new StringJoinNode(s, sep, sleft, sright); :}
 ;
 
 listaArgs ::=
@@ -360,6 +361,12 @@ funcDecl ::=
 
     | FUNC ID:name PAR1 listaParams:p PAR2 tipo:t LLAVE1 listaStmt:b LLAVE2
     {: RESULT = new FuncDeclNode(name, p, t, b, nameleft, nameright); :}
+  
+;
+
+  structDecl ::=
+    TYPE ID:name STRUCT LLAVE1 listaParams:campos LLAVE2
+    {: RESULT = new StructDeclNode(name, campos, nameleft, nameright); :}
 ;
 
 listaParams ::=
