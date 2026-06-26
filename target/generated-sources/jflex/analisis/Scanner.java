@@ -441,7 +441,8 @@ public class Scanner implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
-    public static java.util.ArrayList<String[]> listaTokens = new java.util.ArrayList<>();
+   public static java.util.ArrayList<String[]> listaTokens = new java.util.ArrayList<>();
+public static java.util.ArrayList<String[]> listaErroresLexicos = new java.util.ArrayList<>();
 
     private Symbol token(int tipo) {
         String[] tok = {
@@ -892,8 +893,20 @@ public class Scanner implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { System.err.println("[ERROR LEXICO] Caracter no reconocido: '"
-        + yytext() + "' en linea " + yyline + ", columna " + yycolumn);
+            { String mensaje = "Caracter no reconocido: '" + yytext() + "'";
+
+    String[] error = {
+        "Lexico",
+        mensaje,
+        String.valueOf(yyline),
+        String.valueOf(yycolumn)
+    };
+
+    listaErroresLexicos.add(error);
+
+    System.out.println("[ERROR LEXICO] " + mensaje
+        + " en linea " + yyline
+        + ", columna " + yycolumn);
             }
           // fall through
           case 67: break;

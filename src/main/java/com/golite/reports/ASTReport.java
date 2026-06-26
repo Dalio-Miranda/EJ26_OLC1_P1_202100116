@@ -24,39 +24,63 @@ public class ASTReport {
         return dot.toString();
     }
 
-    public File generarImagen(Node raiz) throws Exception {
-        String dotTexto = generar(raiz);
+   public File generarImagen(Node raiz) throws Exception {
+    String dotTexto = generar(raiz);
 
-        File carpeta = new File("reportes");
-        if (!carpeta.exists()) {
-            carpeta.mkdirs();
-        }
+    String rutaBase = System.getProperty("user.dir");
+    File carpeta = new File(rutaBase, "reportes");
 
-        File dotFile = new File(carpeta, "ast.dot");
-        File pngFile = new File(carpeta, "ast.png");
-
-        try (FileWriter writer = new FileWriter(dotFile)) {
-            writer.write(dotTexto);
-        }
-
-        ProcessBuilder pb = new ProcessBuilder(
-            "dot",
-            "-Tpng",
-            dotFile.getAbsolutePath(),
-            "-o",
-            pngFile.getAbsolutePath()
-        );
-
-        pb.redirectErrorStream(true);
-        Process proceso = pb.start();
-        int salida = proceso.waitFor();
-
-        if (salida != 0) {
-            throw new RuntimeException("Graphviz no pudo generar la imagen AST.");
-        }
-
-        return pngFile;
+    if (!carpeta.exists()) {
+        carpeta.mkdirs();
     }
+
+    File dotFile = new File(carpeta, "ast.dot");
+    File pngFile = new File(carpeta, "ast.png");
+
+    System.out.println("Ruta base: " + rutaBase);
+    System.out.println("Generando DOT en: " + dotFile.getAbsolutePath());
+    System.out.println("Generando PNG en: " + pngFile.getAbsolutePath());
+
+    try (FileWriter writer = new FileWriter(dotFile)) {
+        writer.write(dotTexto);
+    }
+
+    ProcessBuilder pb = new ProcessBuilder(
+        "dot",
+        "-Tpng",
+        dotFile.getAbsolutePath(),
+        "-o",
+        pngFile.getAbsolutePath()
+    );
+
+    pb.redirectErrorStream(true);
+    Process proceso = pb.start();
+
+    BufferedReader reader = new BufferedReader(
+        new InputStreamReader(proceso.getInputStream())
+    );
+
+    String linea;
+    StringBuilder salidaGraphviz = new StringBuilder();
+
+    while ((linea = reader.readLine()) != null) {
+        salidaGraphviz.append(linea).append("\n");
+    }
+
+    int salida = proceso.waitFor();
+
+    if (salida != 0) {
+        throw new RuntimeException(
+            "Graphviz no pudo generar la imagen AST.\n" + salidaGraphviz.toString()
+        );
+    }
+
+    if (!pngFile.exists()) {
+        throw new RuntimeException("No se encontró el archivo PNG generado: " + pngFile.getAbsolutePath());
+    }
+
+    return pngFile;
+}
 
     private int recorrer(Object obj) {
         if (obj == null) {
