@@ -86,3 +86,149 @@
 /* Rune: '([^'\\]|\\.)' */
 /* Comentario linea: //[^\r\n]* */
 /* Comentario bloque: /*...*/ */
+BNF adicional para Fase 2
+
+```bnf
+<programa> ::= <lista_declaraciones>
+
+<lista_declaraciones> ::= <lista_declaraciones> <declaracion>
+                         | <declaracion>
+
+<declaracion> ::= <funcion>
+                | <struct_decl>
+
+<struct_decl> ::= "type" ID "struct" "{" <lista_campos_struct> "}"
+
+<lista_campos_struct> ::= <lista_campos_struct> "," <campo_struct>
+                         | <campo_struct>
+
+<campo_struct> ::= ID <tipo>
+
+<funcion> ::= "func" ID "(" <lista_parametros> ")" <tipo> "{" <lista_sentencias> "}"
+            | "func" ID "(" <lista_parametros> ")" "{" <lista_sentencias> "}"
+
+<lista_parametros> ::= <lista_parametros> "," <parametro>
+                     | <parametro>
+                     | ε
+
+<parametro> ::= ID <tipo>
+
+<tipo> ::= "int"
+         | "float64"
+         | "string"
+         | "bool"
+         | "rune"
+
+<lista_sentencias> ::= <lista_sentencias> <sentencia>
+                     | <sentencia>
+                     | ε
+
+<sentencia> ::= "var" ID <tipo> "=" <expresion>
+              | ID ":=" <expresion>
+              | ID "=" <expresion>
+              | ID "++"
+              | ID "--"
+              | "if" <expresion> "{" <lista_sentencias> "}"
+              | "if" <expresion> "{" <lista_sentencias> "}" "else" "{" <lista_sentencias> "}"
+              | "for" <expresion> "{" <lista_sentencias> "}"
+              | "switch" <expresion> "{" <lista_cases> <default_case> "}"
+              | "return" <expresion>
+              | "break"
+              | "continue"
+              | <llamada_funcion>
+
+<lista_cases> ::= <lista_cases> <case>
+                | <case>
+                | ε
+
+<case> ::= "case" <expresion> ":" <lista_sentencias>
+
+<default_case> ::= "default" ":" <lista_sentencias>
+                 | ε
+
+<llamada_funcion> ::= ID "(" <lista_argumentos> ")"
+                    | "fmt.Println" "(" <lista_argumentos> ")"
+
+<lista_argumentos> ::= <lista_argumentos> "," <expresion>
+                     | <expresion>
+                     | ε
+
+<expresion> ::= <expresion> "+" <expresion>
+              | <expresion> "-" <expresion>
+              | <expresion> "*" <expresion>
+              | <expresion> "/" <expresion>
+              | <expresion> "%" <expresion>
+              | <expresion> "==" <expresion>
+              | <expresion> "!=" <expresion>
+              | <expresion> "<" <expresion>
+              | <expresion> ">" <expresion>
+              | <expresion> "<=" <expresion>
+              | <expresion> ">=" <expresion>
+              | <expresion> "&&" <expresion>
+              | <expresion> "||" <expresion>
+              | "!" <expresion>
+              | "(" <expresion> ")"
+              | ID
+              | ENTERO
+              | DECIMAL
+              | CADENA
+              | RUNE
+              | "true"
+              | "false"
+              | "nil"
+              | <slice_literal>
+              | <matriz_literal>
+              | <acceso_slice>
+              | <acceso_matriz>
+              | <struct_init>
+              | <acceso_struct>
+              | <funcion_embebida>
+              | <llamada_funcion>
+
+<slice_literal> ::= "[" "]" <tipo> "{" <lista_argumentos> "}"
+
+<matriz_literal> ::= "[" "]" "[" "]" <tipo> "{" <lista_argumentos> "}"
+
+<acceso_slice> ::= ID "[" <expresion> "]"
+
+<acceso_matriz> ::= ID "[" <expresion> "]" "[" <expresion> "]"
+
+<struct_init> ::= ID "{" <lista_valores_struct> "}"
+
+<lista_valores_struct> ::= <lista_valores_struct> "," <valor_struct>
+                          | <valor_struct>
+                          | ε
+
+<valor_struct> ::= ID ":" <expresion>
+
+<acceso_struct> ::= ID "." ID
+
+<funcion_embebida> ::= "strconv.Atoi" "(" <expresion> ")"
+                     | "strconv.ParseFloat" "(" <expresion> ")"
+                     | "reflect.TypeOf" "(" <expresion> ")"
+                     | "len" "(" <expresion> ")"
+                     | "append" "(" <expresion> "," <expresion> ")"
+                     | "slices.Index" "(" <expresion> "," <expresion> ")"
+                     | "strings.Join" "(" <expresion> "," <expresion> ")"
+```
+
+Nota de implementación:
+
+Para la declaración de structs, los campos se separan por coma:
+
+```go
+type Persona struct {
+    nombre string, edad int
+}
+```
+
+Para matrices básicas se utiliza una matriz construida con filas tipo slice:
+
+```go
+fila1 := []int{1,2}
+fila2 := []int{3,4}
+matriz := [][]int{fila1,fila2}
+
+fmt.Println(matriz[0][0])
+fmt.Println(matriz[1][1])
+```
