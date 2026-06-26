@@ -350,6 +350,9 @@ expr ::=
 | STRINGJOIN PAR1 expr:s COMA expr:sep PAR2
 {: RESULT = new StringJoinNode(s, sep, sleft, sright); :}
 
+| CORCHETE1 CORCHETE2 CORCHETE1 CORCHETE2 tipo:t LLAVE1 listaArgs:a LLAVE2
+{: RESULT = new SliceLiteralNode("[]" + t, a, aleft, aright); :}
+
 ;
 campoStruct ::=
     ID:n COLON expr:v
