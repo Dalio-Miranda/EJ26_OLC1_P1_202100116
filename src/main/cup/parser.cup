@@ -44,7 +44,7 @@ parser code {:
 terminal VAR, FUNC, IF, ELSE, FOR, BREAK, CONTINUE, RETURN, NIL;
 terminal Boolean TRUE, FALSE;
 terminal TINT, TFLOAT64, TSTRING, TBOOL, TRUNE;
-terminal PRINTLN, ATOI, PARSEFLOAT, TYPEOF;
+terminal PRINTLN, ATOI, PARSEFLOAT, TYPEOF, LEN, APPEND;
 terminal MAS, MENOS, MULT, DIV, MOD;
 terminal INC, DEC;
 terminal ASIGN, ASIGNDECL, MASIGUAL, MENOSIGUAL;
@@ -305,6 +305,17 @@ expr ::=
 
     | ID:f PAR1 listaArgs:a PAR2
     {: RESULT = new FuncCallNode(f, a, fleft, fright); :}
+        | CORCHETE1 CORCHETE2 tipo:t LLAVE1 listaArgs:a LLAVE2
+    {: RESULT = new SliceLiteralNode(t, a, aleft, aright); :}
+
+    | ID:s CORCHETE1 expr:i CORCHETE2
+{: RESULT = new SliceAccessNode(new IdentifierNode(s, sleft, sright), i, sleft, sright); :}
+
+    | LEN PAR1 expr:e PAR2
+    {: RESULT = new LenNode(e, eleft, eright); :}
+
+    | APPEND PAR1 expr:s COMA expr:v PAR2
+    {: RESULT = new AppendNode(s, v, sleft, sright); :}
 ;
 
 listaArgs ::=

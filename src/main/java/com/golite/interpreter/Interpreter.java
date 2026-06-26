@@ -48,8 +48,11 @@ public class Interpreter implements Visitor {
         if (valor instanceof Boolean) return "bool";
         if (valor instanceof Character) return "rune";
         if (valor instanceof FuncDeclNode) return "func";
+         if (valor instanceof ArrayList<?>) return "slice";
+   
         return "desconocido";
-    }
+         }
+       
 
     private boolean sonCompatibles(String tipoVar, String tipoVal) {
         if (tipoVar == null || tipoVal == null) return false;
@@ -850,4 +853,78 @@ public class Interpreter implements Visitor {
 
         return null;
     }
+    @Override
+public Object visit(SliceLiteralNode node, Environment env) {
+    ArrayList<Object> lista = new ArrayList<>();
+
+    for (Node expr : node.values) {
+        Object valor = expr.accept(this, env);
+        lista.add(valor);
+    }
+
+    return lista;
+}
+
+@Override
+public Object visit(SliceAccessNode node, Environment env) {
+    Object slice = node.slice.accept(this, env);
+    Object index = node.index.accept(this, env);
+
+    if (!(slice instanceof ArrayList<?>)) {
+        registrarError("Se intento acceder a un valor que no es slice",
+                node.line, node.column);
+        return null;
+    }
+
+    if (!(index instanceof Integer)) {
+        registrarError("El indice del slice debe ser int",
+                node.line, node.column);
+        return null;
+    }
+
+    ArrayList<?> lista = (ArrayList<?>) slice;
+    int i = (Integer) index;
+
+    if (i < 0 || i >= lista.size()) {
+        registrarError("Indice fuera de rango en slice",
+                node.line, node.column);
+        return null;
+    }
+
+    return lista.get(i);
+}
+
+@Override
+public Object visit(LenNode node, Environment env) {
+    Object valor = node.expr.accept(this, env);
+
+    if (valor instanceof ArrayList<?>) {
+        return ((ArrayList<?>) valor).size();
+    }
+
+    if (valor instanceof String) {
+        return ((String) valor).length();
+    }
+
+    registrarError("len solo acepta slices o strings",
+            node.line, node.column);
+    return null;
+}
+
+@Override
+public Object visit(AppendNode node, Environment env) {
+    Object slice = node.slice.accept(this, env);
+    Object valor = node.value.accept(this, env);
+
+    if (!(slice instanceof ArrayList<?>)) {
+        registrarError("append requiere un slice como primer argumento",
+                node.line, node.column);
+        return null;
+    }
+
+    ArrayList<Object> nuevaLista = new ArrayList<>((ArrayList<?>) slice);
+    nuevaLista.add(valor);
+
+    return nuevaLista;
+}
 }

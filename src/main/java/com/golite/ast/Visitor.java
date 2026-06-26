@@ -42,4 +42,8 @@ public interface Visitor {
     // Asignaciones
     Object visit(CompoundAssignNode node, Environment env);
     Object visit(IncrDecrNode node, Environment env);
+    Object visit(SliceLiteralNode node, Environment env);
+Object visit(SliceAccessNode node, Environment env);
+Object visit(LenNode node, Environment env);
+Object visit(AppendNode node, Environment env);
 }

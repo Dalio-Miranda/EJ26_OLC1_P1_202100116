@@ -8,67 +8,69 @@ package analisis;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int PAR2 = 44;
-  public static final int PAR1 = 43;
+  public static final int PAR2 = 46;
+  public static final int PAR1 = 45;
   public static final int TSTRING = 15;
-  public static final int MULT = 24;
-  public static final int LLAVE2 = 46;
-  public static final int LLAVE1 = 45;
-  public static final int ENTERO = 56;
+  public static final int MULT = 26;
+  public static final int LLAVE2 = 48;
+  public static final int LLAVE1 = 47;
+  public static final int ENTERO = 58;
   public static final int TFLOAT64 = 14;
-  public static final int CASE = 54;
-  public static final int DIFERENTE = 34;
+  public static final int CASE = 56;
+  public static final int DIFERENTE = 36;
   public static final int CONTINUE = 8;
   public static final int PRINTLN = 18;
   public static final int FOR = 6;
-  public static final int NOT = 41;
-  public static final int AND = 39;
-  public static final int MENORIGUAL = 36;
-  public static final int IGUAL = 33;
+  public static final int NOT = 43;
+  public static final int AND = 41;
+  public static final int MENORIGUAL = 38;
+  public static final int IGUAL = 35;
+  public static final int APPEND = 23;
   public static final int PARSEFLOAT = 20;
   public static final int TYPEOF = 21;
-  public static final int MASIGUAL = 31;
+  public static final int MASIGUAL = 33;
   public static final int NIL = 10;
-  public static final int CORCHETE2 = 48;
-  public static final int OR = 40;
-  public static final int CORCHETE1 = 47;
+  public static final int CORCHETE2 = 50;
+  public static final int OR = 42;
+  public static final int CORCHETE1 = 49;
   public static final int TBOOL = 16;
-  public static final int INC = 27;
-  public static final int DIV = 25;
+  public static final int INC = 29;
+  public static final int DIV = 27;
   public static final int ATOI = 19;
-  public static final int UMENOS = 42;
+  public static final int UMENOS = 44;
   public static final int IF = 4;
-  public static final int ID = 60;
-  public static final int MAYORIGUAL = 38;
-  public static final int DECIMAL = 57;
+  public static final int ID = 62;
+  public static final int MAYORIGUAL = 40;
+  public static final int DECIMAL = 59;
   public static final int EOF = 0;
   public static final int RETURN = 9;
   public static final int TRUE = 11;
   public static final int error = 1;
-  public static final int COMA = 49;
-  public static final int RUNELIT = 59;
-  public static final int CADENA = 58;
-  public static final int MENOS = 23;
-  public static final int MENOR = 35;
-  public static final int MOD = 26;
+  public static final int COMA = 51;
+  public static final int RUNELIT = 61;
+  public static final int CADENA = 60;
+  public static final int MENOS = 25;
+  public static final int MENOR = 37;
+  public static final int MOD = 28;
   public static final int BREAK = 7;
-  public static final int SWITCH = 53;
+  public static final int SWITCH = 55;
   public static final int TRUNE = 17;
-  public static final int MAYOR = 37;
-  public static final int COLON = 52;
+  public static final int MAYOR = 39;
+  public static final int COLON = 54;
   public static final int TINT = 13;
   public static final int ELSE = 5;
-  public static final int PUNTO = 51;
+  public static final int PUNTO = 53;
   public static final int FUNC = 3;
-  public static final int DEFAULT = 55;
-  public static final int MENOSIGUAL = 32;
-  public static final int ASIGN = 29;
-  public static final int PTCOMA = 50;
-  public static final int DEC = 28;
+  public static final int DEFAULT = 57;
+  public static final int MENOSIGUAL = 34;
+  public static final int ASIGN = 31;
+  public static final int PTCOMA = 52;
+  public static final int LEN = 22;
+  public static final int DEC = 30;
   public static final int FALSE = 12;
-  public static final int ASIGNDECL = 30;
+  public static final int ASIGNDECL = 32;
   public static final int VAR = 2;
-  public static final int MAS = 22;
+  public static final int MAS = 24;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -92,6 +94,8 @@ public interface sym {
   "ATOI",
   "PARSEFLOAT",
   "TYPEOF",
+  "LEN",
+  "APPEND",
   "MAS",
   "MENOS",
   "MULT",

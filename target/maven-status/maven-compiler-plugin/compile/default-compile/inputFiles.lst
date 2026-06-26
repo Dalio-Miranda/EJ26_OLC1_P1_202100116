@@ -1,4 +1,5 @@
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\App.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\AppendNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\AssignNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\AtoiNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\BinaryOpNode.java
@@ -14,12 +15,15 @@ C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\FuncDeclNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\IdentifierNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\IfNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\IncrDecrNode.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\LenNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\LiteralNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\Node.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\ParseFloatNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\PrintlnNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\ProgramNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\ReturnNode.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SliceAccessNode.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SliceLiteralNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SwitchNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\TypeOfNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\UnaryOpNode.java

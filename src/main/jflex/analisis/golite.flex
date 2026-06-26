@@ -77,6 +77,8 @@ ComentarioBloque = "/*"[^*]*\*+([^/*][^*]*\*+)*"/"
 "strconv.Atoi"          { return token(sym.ATOI); }
 "strconv.ParseFloat"    { return token(sym.PARSEFLOAT); }
 "reflect.TypeOf"        { return token(sym.TYPEOF); }
+"len"                   { return token(sym.LEN); }
+"append"                { return token(sym.APPEND); }
 
 ":="            { return token(sym.ASIGNDECL); }
 "+="            { return token(sym.MASIGUAL); }
