@@ -5,6 +5,7 @@ import analisis.parser;
 import com.golite.ast.*;
 import com.golite.interpreter.Interpreter;
 import com.golite.reports.ASTReport;
+import com.golite.reports.SymbolTableReport;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,7 +16,6 @@ import java.io.*;
 import java.nio.file.*;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
-import java.io.File;
 
 /**
  * Ventana principal del IDE para el lenguaje GoLite.
@@ -55,6 +55,60 @@ public class MainWindow extends JFrame {
     }
 
     /* ===== INICIALIZACION DE COMPONENTES ===== */
+
+    private void mostrarTablaSimbolos() {
+    String[] columnas = {"No.", "Nombre", "Tipo", "Categoria", "Ambito", "Linea", "Columna"};
+    DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+
+    try {
+        Scanner.listaTokens.clear();
+
+        Scanner scanner = new Scanner(
+            new BufferedReader(new StringReader(editorArea.getText()))
+        );
+
+        parser p = new parser(scanner);
+        Symbol resultado = p.parse();
+
+        if (resultado == null || resultado.value == null) {
+            JOptionPane.showMessageDialog(this,
+                "No se pudo generar la tabla de simbolos.",
+                "Tabla de Simbolos",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        ProgramNode ast = (ProgramNode) resultado.value;
+
+        SymbolTableReport reporte = new SymbolTableReport();
+        ArrayList<String[]> simbolos = reporte.generar(ast);
+
+        int no = 1;
+        for (String[] s : simbolos) {
+            modelo.addRow(new Object[]{
+                no++, s[0], s[1], s[2], s[3], s[4], s[5]
+            });
+        }
+
+    } catch (Exception e) {
+        modelo.addRow(new Object[]{1, "Error: " + e.getMessage(), "-", "-", "-", "-", "-"});
+    }
+
+    JTable tabla = new JTable(modelo);
+    tabla.setBackground(new Color(40, 40, 40));
+    tabla.setForeground(Color.WHITE);
+    tabla.setGridColor(new Color(70, 70, 70));
+    tabla.getTableHeader().setBackground(new Color(0, 120, 215));
+    tabla.getTableHeader().setForeground(Color.WHITE);
+    tabla.setFont(new Font("Consolas", Font.PLAIN, 13));
+    tabla.setRowHeight(22);
+
+    JFrame ventana = new JFrame("Reporte Tabla de Simbolos");
+    ventana.setSize(900, 500);
+    ventana.setLocationRelativeTo(this);
+    ventana.add(new JScrollPane(tabla));
+    ventana.setVisible(true);
+}
 
     /**
      * Inicializa todos los componentes de la interfaz grafica
@@ -153,21 +207,26 @@ public class MainWindow extends JFrame {
 
         JMenuItem itemTokens = new JMenuItem("Tabla de Tokens");
         JMenuItem itemErrores = new JMenuItem("Reporte de Errores");
+        JMenuItem itemSymbolTable = new JMenuItem("Tabla de Símbolos");
         JMenuItem itemAST = new JMenuItem("Reporte AST");
 
         itemTokens.setBackground(bgItem);
         itemTokens.setForeground(Color.WHITE);
         itemErrores.setBackground(bgItem);
         itemErrores.setForeground(Color.WHITE);
+        itemSymbolTable.setBackground(bgItem);
+        itemSymbolTable.setForeground(Color.WHITE); 
         itemAST.setBackground(bgItem);
         itemAST.setForeground(Color.WHITE);
 
         itemTokens.addActionListener(e -> mostrarTokens());
         itemErrores.addActionListener(e -> mostrarErrores());
+        itemSymbolTable.addActionListener(e -> mostrarTablaSimbolos());
         itemAST.addActionListener(e -> mostrarAST());
 
         menuReportes.add(itemTokens);
         menuReportes.add(itemErrores);
+        menuReportes.add(itemSymbolTable);
         menuReportes.add(itemAST);
 
         menuBar.add(menuArchivo);
