@@ -80,6 +80,7 @@ ComentarioBloque = "/*"[^*]*\*+([^/*][^*]*\*+)*"/"
 "len"                   { return token(sym.LEN); }
 "append"                { return token(sym.APPEND); }
 "slices.Index"          { return token(sym.SLICEINDEX); }
+"strings.Join"          { return token(sym.STRINGJOIN); }
 
 ":="            { return token(sym.ASIGNDECL); }
 "+="            { return token(sym.MASIGUAL); }

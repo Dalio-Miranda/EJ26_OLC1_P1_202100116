@@ -954,4 +954,35 @@ public Object visit(SliceIndexNode node, Environment env) {
 
     return -1;
 }
+@Override
+public Object visit(StringJoinNode node, Environment env) {
+
+    Object listaObj = node.slice.accept(this, env);
+    Object sepObj = node.separator.accept(this, env);
+
+    if (!(listaObj instanceof java.util.ArrayList<?>)) {
+        registrarError("strings.Join requiere un slice", node.line, node.column);
+        return null;
+    }
+
+    if (!(sepObj instanceof String)) {
+        registrarError("El separador debe ser string", node.line, node.column);
+        return null;
+    }
+
+    java.util.ArrayList<?> lista = (java.util.ArrayList<?>) listaObj;
+
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < lista.size(); i++) {
+
+        if (i > 0)
+            sb.append((String) sepObj);
+
+        sb.append(lista.get(i).toString());
+
+    }
+
+    return sb.toString();
+}
 }

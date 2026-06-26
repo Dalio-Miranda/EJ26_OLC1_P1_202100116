@@ -44,7 +44,7 @@ parser code {:
 terminal VAR, FUNC, IF, ELSE, FOR, BREAK, CONTINUE, RETURN, NIL;
 terminal Boolean TRUE, FALSE;
 terminal TINT, TFLOAT64, TSTRING, TBOOL, TRUNE;
-terminal PRINTLN, ATOI, PARSEFLOAT, TYPEOF, LEN, APPEND, SLICEINDEX;
+terminal PRINTLN, ATOI, PARSEFLOAT, TYPEOF, LEN, APPEND, SLICEINDEX, STRINGJOIN;
 terminal MAS, MENOS, MULT, DIV, MOD;
 terminal INC, DEC;
 terminal ASIGN, ASIGNDECL, MASIGUAL, MENOSIGUAL;
@@ -318,6 +318,8 @@ expr ::=
     {: RESULT = new AppendNode(s, v, sleft, sright); :}
         | SLICEINDEX PAR1 expr:s COMA expr:v PAR2
     {: RESULT = new SliceIndexNode(s, v, sleft, sright); :}
+    | STRINGJOIN PAR1 expr:s COMA expr:sep PAR2
+{: RESULT = new StringJoinNode(s, sep, sleft, sright); :}
 ;
 
 listaArgs ::=

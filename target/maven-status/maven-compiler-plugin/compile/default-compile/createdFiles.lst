@@ -39,6 +39,7 @@ com\golite\ast\AtoiNode.class
 com\golite\ast\CompoundAssignNode.class
 com\golite\ast\SliceIndexNode.class
 com\golite\ast\ProgramNode.class
+com\golite\ast\StringJoinNode.class
 com\golite\ast\ContinueNode.class
 com\golite\ast\Environment.class
 com\golite\ast\ParseFloatNode.class
