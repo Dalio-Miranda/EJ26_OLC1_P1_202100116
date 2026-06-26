@@ -79,6 +79,7 @@ ComentarioBloque = "/*"[^*]*\*+([^/*][^*]*\*+)*"/"
 "reflect.TypeOf"        { return token(sym.TYPEOF); }
 "len"                   { return token(sym.LEN); }
 "append"                { return token(sym.APPEND); }
+"slices.Index"          { return token(sym.SLICEINDEX); }
 
 ":="            { return token(sym.ASIGNDECL); }
 "+="            { return token(sym.MASIGUAL); }

@@ -21,6 +21,7 @@ analisis\Scanner.class
 com\golite\ast\FuncCallNode.class
 com\golite\ast\BinaryOpNode.class
 com\golite\gui\MainWindow.class
+com\golite\App.class
 com\golite\ast\UnaryOpNode.class
 analisis\sym.class
 com\golite\ast\ReturnNode.class
@@ -36,6 +37,7 @@ analisis\parser$CUP$parser$actions.class
 com\golite\ast\SliceAccessNode.class
 com\golite\ast\AtoiNode.class
 com\golite\ast\CompoundAssignNode.class
+com\golite\ast\SliceIndexNode.class
 com\golite\ast\ProgramNode.class
 com\golite\ast\ContinueNode.class
 com\golite\ast\Environment.class

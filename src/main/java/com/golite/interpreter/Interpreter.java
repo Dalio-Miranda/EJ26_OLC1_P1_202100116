@@ -927,4 +927,31 @@ public Object visit(AppendNode node, Environment env) {
 
     return nuevaLista;
 }
+@Override
+public Object visit(SliceIndexNode node, Environment env) {
+    Object slice = node.slice.accept(this, env);
+    Object buscado = node.value.accept(this, env);
+
+    if (!(slice instanceof java.util.ArrayList<?>)) {
+        registrarError("slices.Index requiere un slice como primer argumento",
+                node.line, node.column);
+        return null;
+    }
+
+    java.util.ArrayList<?> lista = (java.util.ArrayList<?>) slice;
+
+    for (int i = 0; i < lista.size(); i++) {
+        Object actual = lista.get(i);
+
+        if (actual == null && buscado == null) {
+            return i;
+        }
+
+        if (actual != null && actual.equals(buscado)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
 }
