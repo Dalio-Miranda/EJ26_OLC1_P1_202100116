@@ -992,4 +992,42 @@ public Object visit(StructDeclNode node, Environment env) {
     }
     return null;
 }
+@Override
+public Object visit(StructInitNode node, Environment env) {
+    java.util.HashMap<String, Object> instancia = new java.util.HashMap<>();
+
+    for (int i = 0; i < node.fieldNames.size(); i++) {
+        String nombreCampo = node.fieldNames.get(i);
+        Object valor = node.values.get(i).accept(this, env);
+        instancia.put(nombreCampo, valor);
+    }
+
+    return instancia;
+}
+@Override
+public Object visit(StructAccessNode node, Environment env) {
+    if (!env.exists(node.structName)) {
+        registrarError("El struct '" + node.structName + "' no ha sido declarado",
+                node.line, node.column);
+        return null;
+    }
+
+    Object obj = env.getValue(node.structName);
+
+    if (!(obj instanceof java.util.HashMap<?, ?>)) {
+        registrarError("'" + node.structName + "' no es una instancia de struct",
+                node.line, node.column);
+        return null;
+    }
+
+    java.util.HashMap<?, ?> mapa = (java.util.HashMap<?, ?>) obj;
+
+    if (!mapa.containsKey(node.fieldName)) {
+        registrarError("El atributo '" + node.fieldName + "' no existe en el struct",
+                node.line, node.column);
+        return null;
+    }
+
+    return mapa.get(node.fieldName);
+}
 }

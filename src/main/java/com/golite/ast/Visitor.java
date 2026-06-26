@@ -49,4 +49,6 @@ Object visit(AppendNode node, Environment env);
 Object visit(SliceIndexNode node, Environment env);
 Object visit(StringJoinNode node, Environment env);
 Object visit(StructDeclNode node, Environment env);
+Object visit(StructInitNode node, Environment env);
+Object visit(StructAccessNode node, Environment env);
 }

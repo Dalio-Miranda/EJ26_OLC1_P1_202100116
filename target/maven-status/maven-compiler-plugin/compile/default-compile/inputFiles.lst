@@ -26,7 +26,10 @@ C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SliceAccessNode.jav
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SliceIndexNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SliceLiteralNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StringJoinNode.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructAccessNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructDeclNode.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructFieldValue.java
+C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\StructInitNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\SwitchNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\TypeOfNode.java
 C:\Users\dalio\Documents\GoLite\src\main\java\com\golite\ast\UnaryOpNode.java

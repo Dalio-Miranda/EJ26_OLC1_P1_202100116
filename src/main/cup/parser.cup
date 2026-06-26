@@ -74,6 +74,9 @@ non terminal FuncDeclNode funcDecl;
 non terminal ArrayList<String[]> listaParams;
 non terminal String[] param;
 non terminal StructDeclNode structDecl;
+non terminal ArrayList<StructFieldValue> listaCamposStruct;
+non terminal StructFieldValue campoStruct;
+non terminal StructInitNode structInit;
 
 precedence left OR;
 precedence left AND;
@@ -196,6 +199,25 @@ stmt ::=
        y luego continua con la siguiente sentencia. */
     | error PTCOMA
     {: RESULT = null; :}
+    | ID:id ASIGNDECL ID:name LLAVE1 listaCamposStruct:campos LLAVE2
+{:
+    ArrayList<String> nombres = new ArrayList<String>();
+    ArrayList<Node> valores = new ArrayList<Node>();
+
+    for (StructFieldValue campo : campos) {
+        nombres.add(campo.name);
+        valores.add(campo.value);
+    }
+
+    RESULT = new VarDeclNode(
+        id,
+        null,
+        new StructInitNode(name, nombres, valores, nameleft, nameright),
+        true,
+        idleft,
+        idright
+    );
+:}
 ;
 
 elseOpc ::=
@@ -321,6 +343,17 @@ expr ::=
     {: RESULT = new AppendNode(s, v, sleft, sright); :}
         | SLICEINDEX PAR1 expr:s COMA expr:v PAR2
     {: RESULT = new SliceIndexNode(s, v, sleft, sright); :}
+| ID:s PUNTO ID:f
+{: RESULT = new StructAccessNode(s, f, sleft, sright); :}
+
+| STRINGJOIN PAR1 expr:s COMA expr:sep PAR2
+{: RESULT = new StringJoinNode(s, sep, sleft, sright); :}
+
+;
+campoStruct ::=
+    ID:n COLON expr:v
+    {: RESULT = new StructFieldValue(n, v); :}
+    
 ;
 
 listaArgs ::=
@@ -384,4 +417,34 @@ listaParams ::=
 param ::=
     ID:nombre tipo:t
     {: RESULT = new String[]{nombre, t}; :}
+    ;
+    structInit ::=
+    ID:name LLAVE1 listaCamposStruct:campos LLAVE2
+    {:
+        ArrayList<String> nombres = new ArrayList<String>();
+        ArrayList<Node> valores = new ArrayList<Node>();
+
+        for (StructFieldValue campo : campos) {
+            nombres.add(campo.name);
+            valores.add(campo.value);
+        }
+
+        RESULT = new StructInitNode(name, nombres, valores, nameleft, nameright);
+    :}
+;
+
+listaCamposStruct ::=
+    listaCamposStruct:l COMA campoStruct:c
+    {: l.add(c); RESULT = l; :}
+
+    | campoStruct:c
+    {: ArrayList<StructFieldValue> l = new ArrayList<StructFieldValue>(); l.add(c); RESULT = l; :}
+
+    | /* vacio */
+    {: RESULT = new ArrayList<StructFieldValue>(); :}
+;
+
+campoStruct ::=
+    ID:n COLON expr:v
+    {: RESULT = new StructFieldValue(n, v); :}
 ;
