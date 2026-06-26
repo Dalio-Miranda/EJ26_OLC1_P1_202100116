@@ -37,9 +37,7 @@ public class ASTReport {
     File dotFile = new File(carpeta, "ast.dot");
     File pngFile = new File(carpeta, "ast.png");
 
-    System.out.println("Ruta base: " + rutaBase);
-    System.out.println("Generando DOT en: " + dotFile.getAbsolutePath());
-    System.out.println("Generando PNG en: " + pngFile.getAbsolutePath());
+    
 
     try (FileWriter writer = new FileWriter(dotFile)) {
         writer.write(dotTexto);
