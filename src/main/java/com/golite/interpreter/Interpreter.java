@@ -49,6 +49,28 @@ public class Interpreter implements Visitor {
         if (valor instanceof Character) return "rune";
         if (valor instanceof FuncDeclNode) return "func";
          if (valor instanceof ArrayList<?>) return "slice";
+         if (valor instanceof java.util.HashMap<?, ?> mapa) {
+    if (mapa.containsKey("__tipoStruct")) {
+        Object tipoStruct = mapa.get("__tipoStruct");
+        if (tipoStruct != null) {
+            return tipoStruct.toString();
+        }
+    }
+    return "struct";
+}
+if (valor instanceof java.util.HashMap<?, ?>) {
+    java.util.HashMap<?, ?> mapa = (java.util.HashMap<?, ?>) valor;
+
+    if (mapa.containsKey("__tipoStruct")) {
+        Object tipoStruct = mapa.get("__tipoStruct");
+
+        if (tipoStruct != null) {
+            return tipoStruct.toString();
+        }
+    }
+
+    return "struct";
+}
    
         return "desconocido";
          }
@@ -995,6 +1017,7 @@ public Object visit(StructDeclNode node, Environment env) {
 @Override
 public Object visit(StructInitNode node, Environment env) {
     java.util.HashMap<String, Object> instancia = new java.util.HashMap<>();
+    instancia.put("__tipoStruct", node.structName);
 
     for (int i = 0; i < node.fieldNames.size(); i++) {
         String nombreCampo = node.fieldNames.get(i);

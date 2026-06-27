@@ -248,6 +248,7 @@ tipo ::=
     | TSTRING   {: RESULT = "string"; :}
     | TBOOL     {: RESULT = "bool"; :}
     | TRUNE     {: RESULT = "rune"; :}
+    | ID:id     {: RESULT = id; :}
 ;
 
 expr ::=
