@@ -570,6 +570,7 @@ GoLite/
 ```
 
 ---
+
 ## Structs
 
 Se implementó soporte para definición, creación, acceso y modificación de atributos en structs.
@@ -679,7 +680,6 @@ Salida esperada:
 ```
 
 Estos errores también se muestran en el reporte de errores de la interfaz gráfica.
-
 
 ## Notas finales
 
