@@ -892,6 +892,10 @@ public Object visit(SliceAccessNode node, Environment env) {
     Object slice = node.slice.accept(this, env);
     Object index = node.index.accept(this, env);
 
+       if (slice == null) {
+    return null;
+}
+
     if (!(slice instanceof ArrayList<?>)) {
         registrarError("Se intento acceder a un valor que no es slice",
                 node.line, node.column);
