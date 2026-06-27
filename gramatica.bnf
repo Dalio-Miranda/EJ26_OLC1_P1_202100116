@@ -1,108 +1,33 @@
+```bnf
 /* ================================================
-   Gramática BNF - Lenguaje GoLite Fase 1
+   Gramática BNF - Lenguaje GoLite
+   Fase 1 + Fase 2
    Organización de Lenguajes y Compiladores 1
    Estudiante: Dalio Miranda - 202100116
    Universidad San Carlos de Guatemala - FIUSAC
    ================================================ */
 
-/* Símbolo inicial */
-<programa> ::= <listaStmt>
+/* ================================================
+   SÍMBOLO INICIAL
+   ================================================ */
 
-/* Lista de sentencias */
-<listaStmt> ::= <listaStmt> <stmt>
-              | <listaStmt> ";"
-              | ε
-
-/* Sentencias */
-<stmt> ::= "var" ID <tipo> "=" <expr>
-         | "var" ID <tipo>
-         | ID ":=" <expr>
-         | ID "=" <expr>
-         | ID "+=" <expr>
-         | ID "-=" <expr>
-         | ID "++"
-         | ID "--"
-         | "if" <expr> "{" <listaStmt> "}" "else" "{" <listaStmt> "}"
-         | "if" <expr> "{" <listaStmt> "}" "else" "if" <expr> "{" <listaStmt> "}"
-         | "if" <expr> "{" <listaStmt> "}"
-         | "for" <expr> "{" <listaStmt> "}"
-         | "for" ID ":=" <expr> ";" <expr> ";" ID "++" "{" <listaStmt> "}"
-         | "for" ID ":=" <expr> ";" <expr> ";" ID "--" "{" <listaStmt> "}"
-         | "{" <listaStmt> "}"
-         | "break"
-         | "continue"
-         | <expr>
-
-/* Tipos de datos primitivos */
-<tipo> ::= "int"
-         | "float64"
-         | "string"
-         | "bool"
-         | "rune"
-
-/* Expresiones */
-<expr> ::= <expr> "+" <expr>
-         | <expr> "-" <expr>
-         | <expr> "*" <expr>
-         | <expr> "/" <expr>
-         | <expr> "%" <expr>
-         | <expr> "==" <expr>
-         | <expr> "!=" <expr>
-         | <expr> "<" <expr>
-         | <expr> "<=" <expr>
-         | <expr> ">" <expr>
-         | <expr> ">=" <expr>
-         | <expr> "&&" <expr>
-         | <expr> "||" <expr>
-         | "!" <expr>
-         | "-" <expr>
-         | "(" <expr> ")"
-         | ENTERO
-         | DECIMAL
-         | CADENA
-         | RUNELIT
-         | "true"
-         | "false"
-         | "nil"
-         | ID
-         | "fmt.Println" "(" <listaArgs> ")"
-         | "strconv.Atoi" "(" <expr> ")"
-         | "strconv.ParseFloat" "(" <expr> ")"
-         | "reflect.TypeOf" "(" <expr> ")"
-         | ID "(" <listaArgs> ")"
-
-/* Lista de argumentos */
-<listaArgs> ::= <listaArgs> "," <expr>
-              | <expr>
-              | ε
-
-/* Tokens */
-/* Palabras reservadas: var, func, if, else, for, break, continue, return, nil, true, false */
-/* Tipos: int, float64, string, bool, rune */
-/* Identificador: [a-zA-Z_][a-zA-Z0-9_]* */
-/* Entero: [0-9]+ */
-/* Decimal: [0-9]+"."[0-9]+ */
-/* Cadena: "([^"\\]|\\.)*" */
-/* Rune: '([^'\\]|\\.)' */
-/* Comentario linea: //[^\r\n]* */
-/* Comentario bloque: /*...*/ */
-BNF adicional para Fase 2
-
-```bnf
 <programa> ::= <lista_declaraciones>
+
+/* ================================================
+   DECLARACIONES GLOBALES
+   ================================================ */
 
 <lista_declaraciones> ::= <lista_declaraciones> <declaracion>
                          | <declaracion>
+                         | ε
 
 <declaracion> ::= <funcion>
                 | <struct_decl>
+                | <sentencia>
 
-<struct_decl> ::= "type" ID "struct" "{" <lista_campos_struct> "}"
-
-<lista_campos_struct> ::= <lista_campos_struct> "," <campo_struct>
-                         | <campo_struct>
-
-<campo_struct> ::= ID <tipo>
+/* ================================================
+   FUNCIONES
+   ================================================ */
 
 <funcion> ::= "func" ID "(" <lista_parametros> ")" <tipo> "{" <lista_sentencias> "}"
             | "func" ID "(" <lista_parametros> ")" "{" <lista_sentencias> "}"
@@ -113,29 +38,84 @@ BNF adicional para Fase 2
 
 <parametro> ::= ID <tipo>
 
+/* ================================================
+   STRUCTS
+   ================================================ */
+
+<struct_decl> ::= "type" ID "struct" "{" <lista_campos_struct> "}"
+
+<lista_campos_struct> ::= <lista_campos_struct> "," <campo_struct>
+                         | <campo_struct>
+                         | ε
+
+<campo_struct> ::= ID <tipo>
+
+/* Ejemplo:
+   type Persona struct {
+       nombre string, edad int
+   }
+*/
+
+/* ================================================
+   TIPOS
+   ================================================ */
+
 <tipo> ::= "int"
          | "float64"
          | "string"
          | "bool"
          | "rune"
+         | ID
+
+/* La alternativa ID permite utilizar structs como tipos:
+   func cambiarNombre(p Persona, nuevo string) { ... }
+*/
+
+/* ================================================
+   LISTA DE SENTENCIAS
+   ================================================ */
 
 <lista_sentencias> ::= <lista_sentencias> <sentencia>
+                     | <lista_sentencias> ";"
                      | <sentencia>
                      | ε
 
+/* También se permite listaStmt como alias conceptual de lista_sentencias */
+<listaStmt> ::= <lista_sentencias>
+
+/* ================================================
+   SENTENCIAS
+   ================================================ */
+
 <sentencia> ::= "var" ID <tipo> "=" <expresion>
+              | "var" ID <tipo>
               | ID ":=" <expresion>
               | ID "=" <expresion>
+              | ID "+=" <expresion>
+              | ID "-=" <expresion>
               | ID "++"
               | ID "--"
+              | ID "." ID "=" <expresion>
               | "if" <expresion> "{" <lista_sentencias> "}"
               | "if" <expresion> "{" <lista_sentencias> "}" "else" "{" <lista_sentencias> "}"
+              | "if" <expresion> "{" <lista_sentencias> "}" "else" "if" <expresion> "{" <lista_sentencias> "}"
               | "for" <expresion> "{" <lista_sentencias> "}"
+              | "for" ID ":=" <expresion> ";" <expresion> ";" ID "++" "{" <lista_sentencias> "}"
+              | "for" ID ":=" <expresion> ";" <expresion> ";" ID "--" "{" <lista_sentencias> "}"
               | "switch" <expresion> "{" <lista_cases> <default_case> "}"
               | "return" <expresion>
+              | "return"
               | "break"
               | "continue"
+              | <bloque>
               | <llamada_funcion>
+              | <expresion>
+
+<bloque> ::= "{" <lista_sentencias> "}"
+
+/* ================================================
+   SWITCH - CASE
+   ================================================ */
 
 <lista_cases> ::= <lista_cases> <case>
                 | <case>
@@ -146,12 +126,23 @@ BNF adicional para Fase 2
 <default_case> ::= "default" ":" <lista_sentencias>
                  | ε
 
+/* ================================================
+   LLAMADAS Y ARGUMENTOS
+   ================================================ */
+
 <llamada_funcion> ::= ID "(" <lista_argumentos> ")"
                     | "fmt.Println" "(" <lista_argumentos> ")"
 
 <lista_argumentos> ::= <lista_argumentos> "," <expresion>
                      | <expresion>
                      | ε
+
+/* Compatibilidad con el nombre usado en Fase 1 */
+<listaArgs> ::= <lista_argumentos>
+
+/* ================================================
+   EXPRESIONES
+   ================================================ */
 
 <expresion> ::= <expresion> "+" <expresion>
               | <expresion> "-" <expresion>
@@ -161,29 +152,49 @@ BNF adicional para Fase 2
               | <expresion> "==" <expresion>
               | <expresion> "!=" <expresion>
               | <expresion> "<" <expresion>
-              | <expresion> ">" <expresion>
               | <expresion> "<=" <expresion>
+              | <expresion> ">" <expresion>
               | <expresion> ">=" <expresion>
               | <expresion> "&&" <expresion>
               | <expresion> "||" <expresion>
               | "!" <expresion>
+              | "-" <expresion>
               | "(" <expresion> ")"
-              | ID
               | ENTERO
               | DECIMAL
               | CADENA
-              | RUNE
+              | RUNELIT
               | "true"
               | "false"
               | "nil"
+              | ID
+              | <llamada_funcion>
+              | <funcion_embebida>
               | <slice_literal>
               | <matriz_literal>
               | <acceso_slice>
               | <acceso_matriz>
               | <struct_init>
               | <acceso_struct>
-              | <funcion_embebida>
-              | <llamada_funcion>
+
+/* Compatibilidad con el nombre usado en Fase 1 */
+<expr> ::= <expresion>
+
+/* ================================================
+   FUNCIONES EMBEBIDAS
+   ================================================ */
+
+<funcion_embebida> ::= "strconv.Atoi" "(" <expresion> ")"
+                     | "strconv.ParseFloat" "(" <expresion> ")"
+                     | "reflect.TypeOf" "(" <expresion> ")"
+                     | "len" "(" <expresion> ")"
+                     | "append" "(" <expresion> "," <expresion> ")"
+                     | "slices.Index" "(" <expresion> "," <expresion> ")"
+                     | "strings.Join" "(" <expresion> "," <expresion> ")"
+
+/* ================================================
+   SLICES Y MATRICES
+   ================================================ */
 
 <slice_literal> ::= "[" "]" <tipo> "{" <lista_argumentos> "}"
 
@@ -192,6 +203,19 @@ BNF adicional para Fase 2
 <acceso_slice> ::= ID "[" <expresion> "]"
 
 <acceso_matriz> ::= ID "[" <expresion> "]" "[" <expresion> "]"
+
+/* Ejemplo:
+   fila1 := []int{1,2}
+   fila2 := []int{3,4}
+   matriz := [][]int{fila1,fila2}
+
+   fmt.Println(matriz[0][0])
+   fmt.Println(matriz[1][1])
+*/
+
+/* ================================================
+   CREACIÓN, ACCESO Y MODIFICACIÓN DE STRUCTS
+   ================================================ */
 
 <struct_init> ::= ID "{" <lista_valores_struct> "}"
 
@@ -203,32 +227,102 @@ BNF adicional para Fase 2
 
 <acceso_struct> ::= ID "." ID
 
-<funcion_embebida> ::= "strconv.Atoi" "(" <expresion> ")"
-                     | "strconv.ParseFloat" "(" <expresion> ")"
-                     | "reflect.TypeOf" "(" <expresion> ")"
-                     | "len" "(" <expresion> ")"
-                     | "append" "(" <expresion> "," <expresion> ")"
-                     | "slices.Index" "(" <expresion> "," <expresion> ")"
-                     | "strings.Join" "(" <expresion> "," <expresion> ")"
-```
+<asignacion_struct> ::= ID "." ID "=" <expresion>
 
-Nota de implementación:
+/* La asignación a atributos se reconoce dentro de sentencia:
+   <sentencia> ::= ID "." ID "=" <expresion>
+*/
 
-Para la declaración de structs, los campos se separan por coma:
+/* Ejemplo:
+   type Persona struct {
+       nombre string, edad int
+   }
 
-```go
-type Persona struct {
-    nombre string, edad int
-}
-```
+   p := Persona{nombre: "Dalio", edad: 24}
 
-Para matrices básicas se utiliza una matriz construida con filas tipo slice:
+   fmt.Println(p.nombre)
+   p.nombre = "Carlos"
+   p.edad = 25
+*/
 
-```go
-fila1 := []int{1,2}
-fila2 := []int{3,4}
-matriz := [][]int{fila1,fila2}
+/* ================================================
+   FUNCIONES CON STRUCTS
+   ================================================ */
 
-fmt.Println(matriz[0][0])
-fmt.Println(matriz[1][1])
+/* Las funciones con structs usan la misma sintaxis general de funciones.
+   La diferencia es que el parámetro puede tener como tipo un ID,
+   que representa el nombre del struct.
+*/
+
+/* Ejemplo:
+   type Persona struct {
+       nombre string, edad int
+   }
+
+   func cambiarNombre(p Persona, nuevo string) {
+       p.nombre = nuevo
+   }
+
+   func cumplirAnios(p Persona) {
+       p.edad = p.edad + 1
+   }
+
+   func main() {
+       p := Persona{nombre: "Dalio", edad: 24}
+
+       cambiarNombre(p, "Carlos")
+       cumplirAnios(p)
+
+       fmt.Println(p.nombre)
+       fmt.Println(p.edad)
+   }
+*/
+
+/* ================================================
+   TOKENS
+   ================================================ */
+
+/*
+Palabras reservadas:
+var, func, if, else, for, switch, case, default,
+break, continue, return, nil, true, false, type, struct
+
+Tipos:
+int, float64, string, bool, rune
+
+Funciones embebidas:
+fmt.Println, strconv.Atoi, strconv.ParseFloat, reflect.TypeOf,
+len, append, slices.Index, strings.Join
+
+Operadores:
++  -  *  /  %
+=  :=  +=  -=
+==  !=  <  <=  >  >=
+&&  ||  !
+++  --
+
+Signos:
+( ) { } [ ] , ; . :
+
+Identificador:
+[a-zA-Z_][a-zA-Z0-9_]*
+
+Entero:
+[0-9]+
+
+Decimal:
+[0-9]+"."[0-9]+
+
+Cadena:
+"([^"\\]|\\.)*"
+
+Rune:
+'([^'\\]|\\.)'
+
+Comentario de línea:
+//[^\r\n]*
+
+Comentario de bloque:
+/* ... */
+*/
 ```
