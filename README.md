@@ -570,6 +570,116 @@ GoLite/
 ```
 
 ---
+## Structs
+
+Se implementó soporte para definición, creación, acceso y modificación de atributos en structs.
+
+Nota: en esta implementación, los campos dentro del struct se separan por coma.
+
+```go
+type Persona struct {
+    nombre string, edad int
+}
+
+func main() {
+    p := Persona{nombre: "Dalio", edad: 24}
+
+    fmt.Println(p.nombre)
+    fmt.Println(p.edad)
+
+    p.nombre = "Carlos"
+    p.edad = 25
+
+    fmt.Println(p.nombre)
+    fmt.Println(p.edad)
+}
+```
+
+Salida esperada:
+
+```txt
+Dalio
+24
+Carlos
+25
+```
+
+---
+
+## Funciones con structs
+
+Se implementó soporte para funciones que reciben structs como parámetros.
+Debido a que internamente los structs se manejan como referencias, una función puede modificar sus atributos y los cambios se mantienen fuera de la función.
+
+```go
+type Persona struct {
+    nombre string, edad int
+}
+
+func cambiarNombre(p Persona, nuevo string) {
+    p.nombre = nuevo
+}
+
+func cumplirAnios(p Persona) {
+    p.edad = p.edad + 1
+}
+
+func main() {
+    p := Persona{nombre: "Dalio", edad: 24}
+
+    fmt.Println(p.nombre)
+    fmt.Println(p.edad)
+
+    cambiarNombre(p, "Carlos")
+    cumplirAnios(p)
+
+    fmt.Println(p.nombre)
+    fmt.Println(p.edad)
+}
+```
+
+Salida esperada:
+
+```txt
+Dalio
+24
+Carlos
+25
+```
+
+---
+
+## Manejo de errores léxicos
+
+El analizador léxico detecta caracteres no reconocidos y los agrega al reporte de errores.
+
+Ejemplo:
+
+```go
+func main() {
+    x := 10
+
+    @
+    $
+    ¬
+
+    fmt.Println(x)
+}
+```
+
+Salida esperada:
+
+```txt
+10
+
+=== Errores Lexicos ===
+[Lexico] Caracter no reconocido: '@'
+[Lexico] Caracter no reconocido: '$'
+[Lexico] Caracter no reconocido: '¬'
+```
+
+Estos errores también se muestran en el reporte de errores de la interfaz gráfica.
+
 
 ## Notas finales
 
