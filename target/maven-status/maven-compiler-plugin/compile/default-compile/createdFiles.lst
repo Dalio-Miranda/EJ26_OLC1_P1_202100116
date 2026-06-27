@@ -13,7 +13,6 @@ com\golite\ast\VarDeclNode.class
 com\golite\ast\FuncCallNode.class
 com\golite\ast\BinaryOpNode.class
 com\golite\ast\StructAssignNode.class
-com\golite\App.class
 com\golite\ast\UnaryOpNode.class
 com\golite\reports\SymbolTableReport.class
 com\golite\ast\ForNode.class
