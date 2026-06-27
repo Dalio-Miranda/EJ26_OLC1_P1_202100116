@@ -2,7 +2,6 @@ com\golite\ast\PrintlnNode.class
 com\golite\ast\Visitor.class
 com\golite\ast\BreakNode.class
 com\golite\gui\TextLineNumber.class
-com\golite\Main.class
 com\golite\ast\AssignNode.class
 analisis\parser.class
 com\golite\reports\ASTReport.class
@@ -35,8 +34,6 @@ com\golite\interpreter\Interpreter$ContinueException.class
 com\golite\interpreter\Interpreter$BreakException.class
 com\golite\ast\LenNode.class
 com\golite\interpreter\Interpreter$ReturnException.class
-analisis\Scanner.class
-com\golite\gui\MainWindow.class
 analisis\sym.class
 com\golite\ast\StructFieldValue.class
 com\golite\ast\ReturnNode.class

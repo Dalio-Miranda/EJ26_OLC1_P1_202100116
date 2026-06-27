@@ -219,6 +219,13 @@ stmt ::=
         idright
     );
 :}
+ |VAR ID:id tipo:t ASIGN expr:e
+      {: RESULT = new VarDeclNode(id, t, e, false, idleft, idright); :}
+
+    | ID:s PUNTO ID:f ASIGN expr:v
+      {:
+          RESULT = new StructAssignNode(s, f, v, sleft, sright);
+      :}
 ;
 
 elseOpc ::=
@@ -355,7 +362,7 @@ expr ::=
     {: RESULT = new AppendNode(s, v, sleft, sright); :}
         | SLICEINDEX PAR1 expr:s COMA expr:v PAR2
     {: RESULT = new SliceIndexNode(s, v, sleft, sright); :}
-| ID:s PUNTO ID:f
+| ID:s PUNTO ID:f 
 {: RESULT = new StructAccessNode(s, f, sleft, sright); :}
 
 | STRINGJOIN PAR1 expr:s COMA expr:sep PAR2
@@ -388,6 +395,8 @@ switchStmt ::=
 
     | SWITCH expr:e LLAVE1 listaCases:lc DEFAULT COLON listaStmt:ds LLAVE2
     {: RESULT = new SwitchNode(e, lc, ds, eleft, eright); :}
+
+
 ;
 
 listaCases ::=
