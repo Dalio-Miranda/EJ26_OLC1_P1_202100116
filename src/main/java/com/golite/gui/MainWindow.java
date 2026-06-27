@@ -451,6 +451,8 @@ public class MainWindow extends JFrame {
         try {
             /* Limpiar tokens anteriores */
             Scanner.listaTokens.clear();
+            Scanner.listaErroresLexicos.clear();
+            
 
             /* Crear scanner y parser */
             Scanner scanner = new Scanner(
@@ -476,6 +478,7 @@ public class MainWindow extends JFrame {
             if (!interprete.consola.toString().isEmpty()) {
                 consolaArea.append(interprete.consola.toString());
             }
+        
 
             /* Mostrar errores semanticos si los hay */
             if (!interprete.errores.isEmpty()) {
@@ -494,6 +497,14 @@ public class MainWindow extends JFrame {
                         + " (linea " + error[1] + ", columna " + error[2] + ")\n");
                 }
             }
+            /* Mostrar errores lexicos si los hay */
+if (!Scanner.listaErroresLexicos.isEmpty()) {
+    consolaArea.append("\n=== Errores Lexicos ===\n");
+    for (String[] error : Scanner.listaErroresLexicos) {
+        consolaArea.append("[" + error[3] + "] " + error[0]
+            + " (linea " + error[1] + ", columna " + error[2] + ")\n");
+    }
+}
 
             consolaArea.append("\n=== Ejecucion completada ===\n");
 
@@ -544,17 +555,26 @@ public class MainWindow extends JFrame {
         String[] columnas = {"No.", "Descripcion", "Linea", "Columna", "Tipo"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
+        int no = 1;
+
         /* Intentar ejecutar para obtener errores */
         try {
             Scanner.listaTokens.clear();
+
             Scanner scanner = new Scanner(
                 new BufferedReader(new StringReader(editorArea.getText()))
             );
             parser p = new parser(scanner);
             Symbol resultado = p.parse();
 
+            /* Errores lexicos */
+for (String[] error : Scanner.listaErroresLexicos) {
+    modelo.addRow(new Object[]{
+        no++, error[0], error[1], error[2], error[3]
+    });
+}
+
             /* Errores sintacticos */
-            int no = 1;
             for (String[] error : p.errores) {
                 modelo.addRow(new Object[]{
                     no++, error[0], error[1], error[2], error[3]

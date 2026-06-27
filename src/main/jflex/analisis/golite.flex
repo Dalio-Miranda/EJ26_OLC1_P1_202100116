@@ -14,7 +14,6 @@ import java_cup.runtime.Symbol;
 %{
    public static java.util.ArrayList<String[]> listaTokens = new java.util.ArrayList<>();
 public static java.util.ArrayList<String[]> listaErroresLexicos = new java.util.ArrayList<>();
-
     private Symbol token(int tipo) {
         String[] tok = {
             yytext(),
@@ -154,15 +153,11 @@ ComentarioBloque = "/*"[^*]*\*+([^/*][^*]*\*+)*"/"
     String mensaje = "Caracter no reconocido: '" + yytext() + "'";
 
     String[] error = {
-        "Lexico",
         mensaje,
         String.valueOf(yyline),
-        String.valueOf(yycolumn)
+        String.valueOf(yycolumn),
+        "Lexico"
     };
 
     listaErroresLexicos.add(error);
-
-    System.out.println("[ERROR LEXICO] " + mensaje
-        + " en linea " + yyline
-        + ", columna " + yycolumn);
 }

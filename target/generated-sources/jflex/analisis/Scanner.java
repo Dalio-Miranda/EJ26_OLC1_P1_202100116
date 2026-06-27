@@ -443,7 +443,6 @@ public class Scanner implements java_cup.runtime.Scanner {
   /* user code: */
    public static java.util.ArrayList<String[]> listaTokens = new java.util.ArrayList<>();
 public static java.util.ArrayList<String[]> listaErroresLexicos = new java.util.ArrayList<>();
-
     private Symbol token(int tipo) {
         String[] tok = {
             yytext(),
@@ -896,17 +895,13 @@ public static java.util.ArrayList<String[]> listaErroresLexicos = new java.util.
             { String mensaje = "Caracter no reconocido: '" + yytext() + "'";
 
     String[] error = {
-        "Lexico",
         mensaje,
         String.valueOf(yyline),
-        String.valueOf(yycolumn)
+        String.valueOf(yycolumn),
+        "Lexico"
     };
 
     listaErroresLexicos.add(error);
-
-    System.out.println("[ERROR LEXICO] " + mensaje
-        + " en linea " + yyline
-        + ", columna " + yycolumn);
             }
           // fall through
           case 67: break;
